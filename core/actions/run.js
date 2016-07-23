@@ -35,20 +35,15 @@ module.exports = function container (get, set, clear) {
                 })
               }
             })
-            series(tasks, function (err) {
-              //get('logger').info('run', 'think', rs.last_tick.id)
-              brain.think(function (err) {
-                if (err) {
-                  get('logger').error('think err', err)
-                }
-                var timeout = setTimeout(getNext, c.tick)
-                set('timeouts[]', timeout)
-              })
+            brain.report(function (err, report) {
+              if (err) {
+                get('logger').error('think err', err)
+              }
+              setTimeout(getNext, c.tick)
             })
           }
           else {
-            var timeout = setTimeout(getNext, c.tick)
-            set('timeouts[]', timeout)
+            setTimeout(getNext, c.nhn)
           }
         })
       })()

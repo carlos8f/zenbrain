@@ -11,7 +11,11 @@ module.exports = function container (get, set, clear) {
       })
     },
     report: function (cb) {
-      apply_funcs(get('reporters'), cb)
+      report = {}
+      apply_funcs(report, get('reporters'), function (err) {
+        if (err) return cb(err)
+        cb(null, report)
+      })
     }
   }
 }

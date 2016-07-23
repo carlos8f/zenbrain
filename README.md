@@ -8,4 +8,4 @@ This is a machine "thought" program. It is essentially a map/reduce on arbitrary
 
 ## general progression
 
-thoughts (map) -> thought processor (reduce) -> ticks (graphable) -> brain (reportable) -> simulation or triggers -> logs/ROI
+thoughts (map) -> thought processor (reduce) -> ticks (graphable) -> brain (reportable) -> strategy(s) -> simulation or triggers -> logs/ROI
