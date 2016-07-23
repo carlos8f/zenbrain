@@ -1,0 +1,13 @@
+{
+  "name": "say",
+  "spec": "say <message>",
+  "options": [
+    {
+      "name": "limit",
+      "spec": "-l, --limit <num>",
+      "number": true,
+      "description": "limit to number of characters"
+    }
+  ],
+  "description": "say a message to the world"
+}
