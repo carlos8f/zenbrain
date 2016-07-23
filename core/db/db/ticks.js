@@ -5,7 +5,7 @@ module.exports = function container (get, set) {
   return get('db.createCollection')('ticks', {
     save: function (tick, opts, cb) {
       tick.timestamp = get_timestamp(tick.time)
-      get('db').collection('ticks').update(
+      get('zenbrain:db').collection('ticks').update(
         {
           time: {
             $lt: tick.time
@@ -23,6 +23,9 @@ module.exports = function container (get, set) {
         },
         function (err, result) {
           if (err) return cb(err)
+          if (result.nModified) {
+            get('logger').info('ticks', 'completed', result.nModified, 'ticks.')
+          }
           cb(null, tick)
         })
     }

@@ -3,60 +3,41 @@ var parallel = require('run-parallel')
 
 module.exports = function container (get, set, clear) {
   var c = get('core.constants')
-  var create_tick = get('create_tick')
+  var merge_tick = get('merge_tick')
   var get_timestamp = get('utils.get_timestamp')
   return function process_thoughts (thoughts, cb) {
+    // break thoughts into timebuckets at each size
     var ticks = {}
     var tasks = []
-    trades.forEach(function (trade) {
+    thoughts.forEach(function (thought) {
       c.tick_sizes.forEach(function (size) {
-        var tickId = tb(trade.time)
+        var tickId = tb(thought.time)
           .resize(size)
           .toString()
-        ticks[tickId] || (ticks[tickId] = {trades: [], size: size})
-        ticks[tickId].trades.push(trade)
+        ticks[tickId] || (ticks[tickId] = {thoughts: [], size: size})
+        ticks[tickId].thoughts.push(thought)
       })
     })
     Object.keys(ticks).forEach(function (tickId) {
       var t = ticks[tickId]
+      // for each bucket, load existing tick
       tasks.push(function (done) {
         get('motley:db.ticks').load(tickId, function (err, tick) {
           if (err) return done(err)
-          if (!tick) {
-            var bucket = tb(t.trades[0].time).resize(t.size)
-            tick = {
-              id: bucket.toString(),
-              complete: false,
-              seen: false,
-              size: t.size,
-              time: bucket.toMilliseconds(),
-              min_time: null,
-              max_time: null,
-              vol: 0,
-              trades: 0,
-              buys: 0,
-              buy_vol: 0,
-              exchanges: {},
-              trade_ids: [],
-              avg_price: null,
-              high: 0,
-              low: 100000,
-              close: null,
-              close_time: null
-            }
-            tick.timestamp = get_timestamp(tick.time)
-          }
-          create_tick(tick, t.trades, done)
+          t.tick = tick
+          // upsert this tick
+          merge_tick(t, done)
         })
       })
     })
     parallel(tasks, function (err) {
       if (err) return cb(err)
+      // set processed flag for each thought
       tasks = []
-      trades.forEach(function (trade) {
+      thoughts.forEach(function (thought) {
         tasks.push(function (done) {
-          trade.processed = true
-          get('motley:db.trades').save(trade, done)
+          thought.processed = true
+          get('thoughts').save(thought, done)
         })
       })
       parallel(tasks, cb)

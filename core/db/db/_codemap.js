@@ -13,6 +13,7 @@ module.exports = {
   'collections[]': [
     '#db.logs',
     '#db.run_states',
+    '#db.thoughts',
     '#db.ticks'
   ]
 }

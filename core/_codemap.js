@@ -12,6 +12,7 @@ module.exports = {
     //require('./learner/_codemap'),
     require('./logger/_codemap'),
     require('./map/_codemap'),
+    require('./reduce/_codemap')
     //require('./ticker_server/_codemap'),
     //require('./tweet_reporter/_codemap'),
     //require('./twitter_client/_codemap')
