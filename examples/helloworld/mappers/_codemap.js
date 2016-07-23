@@ -1,5 +1,5 @@
 module.exports = {
   _ns: 'zenbrain',
-  'mappers.message': require('./mapper'),
+  'mappers.message': require('./message_mapper'),
   'mappers[]': '#mappers.message'
 }

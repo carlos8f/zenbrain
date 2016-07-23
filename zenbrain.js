@@ -4,6 +4,7 @@ var make_config = require('./utils/make_config')
 var path = require('path')
 
 module.exports = function zenbrain (p) {
+  p = path.resolve(p)
   return {
     get_version: function () {
       try {
@@ -41,13 +42,14 @@ module.exports = function zenbrain (p) {
           }
         }
         return map
-      }).concat(require('./_codemap'))
+      }).concat(require('./_codemap'), require(path.join(p, '_codemap')))
     },
     make_app: function () {
       return motley({
         _ns: 'zenbrain',
         _folder: 'core',
         _maps: this.get_codemaps(),
+        root: p,
         constants: require('./constants.json'),
         config: this.get_config()
       })

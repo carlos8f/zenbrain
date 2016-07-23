@@ -1,5 +1,5 @@
 module.exports = function container (get, set, clear) {
-  return function report (cb) {
-    
+  return function console_reporter (cb) {
+    cb()
   }
 }

@@ -27,7 +27,7 @@ module.exports = function container (get, set) {
         public: options.public || false
       }
       try {
-        get('motley:db.logs').save(log, function (err, saved) {
+        get('logs').save(log, function (err, saved) {
           // nothing
         })
       }

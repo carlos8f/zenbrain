@@ -1,11 +1,11 @@
 var tb = require('timebucket')
 
 module.exports = function container (get, set) {
-  var get_timestamp = get('zenbot:utils.get_timestamp')
+  var get_timestamp = get('zenbrain:utils.get_timestamp')
   return get('db.createCollection')('ticks', {
     save: function (tick, opts, cb) {
       tick.timestamp = get_timestamp(tick.time)
-      get('db.mongo.db').collection('ticks').update(
+      get('db').collection('ticks').update(
         {
           time: {
             $lt: tick.time

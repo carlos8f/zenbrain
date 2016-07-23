@@ -22,7 +22,7 @@ module.exports = function container (get, set, clear) {
             time: 1
           }
         }
-        get('motley:db.ticks').select(params, function (err, ticks) {
+        get('ticks').select(params, function (err, ticks) {
           if (err) throw err
           if (ticks.length) {
             var tasks = ticks.map(function (tick) {
@@ -31,7 +31,7 @@ module.exports = function container (get, set, clear) {
                 //get('logger').info('run', 'see', tick.id)
                 brain.handle_tick(tick, function (err) {
                   if (err) return done(err)
-                  get('motley:db.ticks').save(tick, done)
+                  get('ticks').save(tick, done)
                 })
               }
             })

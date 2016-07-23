@@ -1,12 +1,12 @@
 module.exports = function container (get, set, clear) {
   var get_id = get('utils.get_id')
-  return function message_mapper (text, cb) {
-    var message = {
-      id: get_id(),
-      text: text,
+  return function map (key, value, cb) {
+    var thought = {
+      id: key || get_id(),
+      value: value,
       processed: false
     }
-    get('messages').save(message, function (err, saved) {
+    get('thoughts').save(thought, function (err, saved) {
       if (err) {
         if (cb) return cb(err)
       }

@@ -7,7 +7,7 @@ module.exports = function container (get, set, clear) {
     return function () {
       var args = [].slice.call(arguments)
       var command = get('command')
-      get('motley:db.run_states').load(command, function (err, run_state) {
+      get('run_states').load(command, function (err, run_state) {
         if (err) throw err
         run_state || (run_state = {
           id: command,

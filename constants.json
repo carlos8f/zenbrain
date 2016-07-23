@@ -1,5 +1,5 @@
 {
-  "id_bytes": 16,
+  "id_bytes": 8,
   "tick_sizes": [
     "10s",
     "1m",
