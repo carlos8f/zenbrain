@@ -1,5 +1,5 @@
 module.exports = function container (get, set, clear) {
-  return function forget (id, options) {
+  return function forget (id) {
     var command = get('commands.forget')
     get('run_states').destroy(id, function (err, destroyed) {
       if (err) throw err

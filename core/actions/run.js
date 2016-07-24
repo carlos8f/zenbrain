@@ -1,7 +1,7 @@
 module.exports = function container (get, set, clear) {
   var c = get('core.constants')
   var series = get('motley:vendor.run-series')
-  return function run (options) {
+  return function run () {
     var rs = get('run_state')
     var runner = get('runner')
     var start_time = new Date().getTime()

@@ -16,5 +16,5 @@ module.exports = function make_config (p) {
   catch (e) {
     fs.writeFileSync(dest, data, {mode: parseInt('0600', 8)})
   }
-  return require(p)
+  return require(dest)
 }

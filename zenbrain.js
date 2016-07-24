@@ -3,7 +3,7 @@ var commander = require('commander')
 var make_config = require('./utils/make_config')
 var path = require('path')
 
-module.exports = function zenbrain (p) {
+module.exports = function zenbrain (p, name) {
   p = path.resolve(p)
   return {
     get_version: function () {
@@ -15,7 +15,17 @@ module.exports = function zenbrain (p) {
       }
     },
     get_config: function () {
-      return make_config(path.join(__dirname, 'config-core-sample.js'))
+      var config = make_config(path.join(__dirname, 'config-core-sample.js'))
+      try {
+        var more_config = make_config(path.join(p, 'config-' + name + '-sample.js'))
+        Object.keys(more_config).forEach(function (k) {
+          config[k] = more_config[k]
+        })
+      }
+      catch (e) {
+        throw e
+      }
+      return config
     },
     get_codemaps: function () {
       return this.get_config().enabled_plugins.map(function (plugin) {
@@ -24,7 +34,6 @@ module.exports = function zenbrain (p) {
           map = require(path.join(p, plugin, '_codemap'))
         }
         catch (e) {
-          throw e
           if (e.code === 'MODULE_NOT_FOUND') {
             try {
               map = require('./' + plugin + '/_codemap')
@@ -47,10 +56,9 @@ module.exports = function zenbrain (p) {
     make_app: function () {
       return motley({
         _ns: 'zenbrain',
-        _folder: 'core',
         _maps: this.get_codemaps(),
         root: p,
-        constants: require('./constants.json'),
+        'core.constants': require('./constants.json'),
         config: this.get_config()
       })
     },

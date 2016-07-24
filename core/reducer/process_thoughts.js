@@ -3,7 +3,7 @@ var parallel = require('run-parallel')
 
 module.exports = function container (get, set, clear) {
   var c = get('core.constants')
-  var merge_tick = get('merge_tick')
+  var merge_tick = get('reducer.merge_tick')
   var get_timestamp = get('utils.get_timestamp')
   return function process_thoughts (thoughts, cb) {
     // break thoughts into timebuckets at each size

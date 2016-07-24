@@ -15,5 +15,6 @@ module.exports = {
     '#db.run_states',
     '#db.thoughts',
     '#db.ticks'
-  ]
+  ],
+  'zenbrain:db_hooks': []
 }

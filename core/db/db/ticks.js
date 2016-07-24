@@ -2,16 +2,17 @@ var tb = require('timebucket')
 
 module.exports = function container (get, set) {
   var get_timestamp = get('zenbrain:utils.get_timestamp')
+  var apply_funcs = get('zenbrain:utils.apply_funcs')
   return get('db.createCollection')('ticks', {
-    save: function (tick, opts, cb) {
-      tick.timestamp = get_timestamp(tick.time)
+    save: function (obj, opts, cb) {
+      obj.timestamp = get_timestamp(obj.time)
       get('zenbrain:db').collection('ticks').update(
         {
           time: {
-            $lt: tick.time
+            $lt: obj.time
           },
           complete: false,
-          size: tick.size
+          size: obj.size
         },
         {
           $set: {
@@ -26,7 +27,7 @@ module.exports = function container (get, set) {
           if (result.nModified) {
             get('logger').info('ticks', 'completed', result.nModified, 'ticks.')
           }
-          cb(null, tick)
+          apply_funcs({op: 'save', type: 'tick', obj: obj}, get('zenbrain:db_hooks'), cb)
         })
     }
   })

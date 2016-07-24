@@ -1,10 +1,10 @@
 var colors = require('colors')
 
 module.exports = function container (get, set, clear) {
-  var do_reduce = get('reduce')
+  var reducer = get('reducer')
   var c = get('core.constants')
-  return function reduce (options) {
-    do_reduce(function (err, idle) {
+  return function reduce () {
+    reducer(function (err, idle) {
       if (err) {
         get('logger').error('reduce err', err, {feed: 'errors'})
       }
@@ -12,7 +12,7 @@ module.exports = function container (get, set, clear) {
         get('logger').info('reduce', 'idle'.grey)
       }
       setTimeout(function () {
-        reduce(options)
+        reduce()
       }, idle ? c.brain_speed_ms : 0)
     })
   }
