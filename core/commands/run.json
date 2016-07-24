@@ -1,1 +1,5 @@
-run.json
+{
+  "name": "run",
+  "spec": "run",
+  "description": "run zenbrain"
+}

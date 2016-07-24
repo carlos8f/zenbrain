@@ -1,7 +1,10 @@
 module.exports = {
   _ns: 'zenbrain',
-  brain: require('./brain'),
-  tick_handlers: [require('./tick_handler')],
+  runner: require('./runner'),
+  'tick_handlers.apply_thinkers': require('./apply_thinkers'),
+  tick_handlers: [
+    '#tick_handlers.apply_thinkers'
+  ],
   thinkers: [],
   reporters: []
 }

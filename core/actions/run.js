@@ -3,11 +3,9 @@ module.exports = function container (get, set, clear) {
   var series = get('motley:vendor.run-series')
   return function run (options) {
     var rs = get('run_state')
-    var brain = get('brain')
-    rs.max_times = {}
+    var runner = get('runner')
     var start_time = new Date().getTime()
     c.tick_sizes.forEach(function (tick_size) {
-      rs.max_times[tick_size] = start_time
       ;(function getNext () {
         var params = {
           query: {
@@ -27,23 +25,23 @@ module.exports = function container (get, set, clear) {
           if (ticks.length) {
             var tasks = ticks.map(function (tick) {
               return function task (done) {
-                rs.max_times[tick_size] = Math.max(tick.min_time, rs.max_times[tick_size])
                 //get('logger').info('run', 'see', tick.id)
-                brain.handle_tick(tick, function (err) {
+                runner(tick, function (err) {
                   if (err) return done(err)
+                  tick.seen = true
                   get('ticks').save(tick, done)
                 })
               }
             })
-            brain.report(function (err, report) {
+            series(tasks, function (err) {
               if (err) {
-                get('logger').error('think err', err)
+                get('logger').error('run err', err)
               }
-              setTimeout(getNext, c.tick)
+              setTimeout(getNext, c.brain_speed_ms / 2)
             })
           }
           else {
-            setTimeout(getNext, c.nhn)
+            setTimeout(getNext, c.brain_speed_ms / 2)
           }
         })
       })()

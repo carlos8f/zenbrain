@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 var zenbrain = require('../..')
-var brain = zenbrain(__dirname, 'example')
+var brain = zenbrain(__dirname, 'markov_buddy')
 brain.cli()

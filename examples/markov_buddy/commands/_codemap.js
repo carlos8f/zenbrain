@@ -1,4 +1,4 @@
 module.exports = {
   _ns: 'zenbrain',
-  'commands[]': require('./say.json')
+  'commands[]': require('./chat.json')
 }

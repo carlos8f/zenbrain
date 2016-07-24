@@ -4,7 +4,7 @@ module.exports = {
   //forget: require('./forget'),
   //launch: require('./launch'),
   reduce: require('./reduce'),
-  //run: require('./run'),
+  run: require('./run'),
   //status: require('./status')
 
   'zenbrain:reducers': []

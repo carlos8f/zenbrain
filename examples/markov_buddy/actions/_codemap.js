@@ -1,4 +1,4 @@
 module.exports = {
   _ns: 'zenbrain',
-  'actions.say': require('./say')
+  'actions.chat': require('./chat')
 }
