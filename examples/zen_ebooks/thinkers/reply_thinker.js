@@ -40,10 +40,6 @@ module.exports = function container (get, set, clear) {
       m.seed(tick.tweet_text, function () {
         tick.replies.forEach(function (reply) {
           var tweet_text = '@' + reply.user.screen_name + ' ' + sanitize(m.respond(reply.text).join(' '))
-          if (tweet_text.length > 140) {
-            tweet_text = tweet_text.substring(0, 139) + '-'
-          }
-          tweet_text = tweet_text.replace(/\s+/g, ' ')
           //get('logger').info('ebooks thinker', 'reply', tweet_text.white)
           rs.tweet_queue.push({
             text: tweet_text,
@@ -52,10 +48,6 @@ module.exports = function container (get, set, clear) {
         })
         if (Math.random() <= config.new_tweet_chance) {
           var tweet_text = sanitize(m.fill(m.pick()).join(' '))
-          if (tweet_text.length > 140) {
-            tweet_text = tweet_text.substring(0, 139) + '-'
-          }
-          tweet_text = tweet_text.replace(/\s+/g, ' ')
           //get('logger').info('ebooks thinker', 'reply', tweet_text.white)
           rs.tweet_queue.push({
             text: tweet_text

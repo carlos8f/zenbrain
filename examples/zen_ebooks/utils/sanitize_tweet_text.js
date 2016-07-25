@@ -1,5 +1,9 @@
 module.exports = function container (get, set, clear) {
   return function sanitize_tweet_text (text) {
+    while (text.length > 135) {
+      var words = text.split(/\s+/)
+      text = words.slice(0, words.length - 1).join(' ')
+    }
     return text
       // strip retweet
       .replace(/RT @[^\s]+\: /g, '')
