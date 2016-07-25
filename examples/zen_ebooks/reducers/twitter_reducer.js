@@ -14,16 +14,30 @@ module.exports = function container (get, set, clear) {
     }).map(function (thought) {
       return thought.value
     })
+    var events = t.thoughts.filter(function (thought) {
+      return thought.key === 'twitter_message' && thought.value.event
+    }).map(function (thought) {
+      return thought.value
+    })
+    //get('logger').info('twitter reducer', 'thoughts', t.thoughts, {feed: 'reducer'})
     if (!tick.tweet_text) tick.tweet_text = ''
     if (!tick.replies) tick.replies = []
+    if (!tick.follows) tick.follows = []
     tweets.forEach(function (tweet) {
       tick.tweet_text += tweet.text + '\n'
-      if (rs.twitter_account && tweet.in_reply_to_user_id_str === rs.twitter_account.id_str) {
+      if (rs.twitter_account && tweet.in_reply_to_user_id_str === rs.twitter_account.id_str && tweet.user.id_str !== rs.twitter_account.id_str) {
         tick.replies.push(tweet)
       }
     })
+    events.forEach(function (event) {
+      if (event.event === 'follow') {
+        if (rs.twitter_account && event.source.id_str !== rs.twitter_account.id_str) {
+          tick.follows.push(event.source)
+        }
+      }
+    })
     if (tick.size === c.brain_speed) {
-      get('logger').info('twitter reducer', 'reduced', tick, {feed: 'reducer'})
+      //get('logger').info('twitter reducer', 'reduced', tick, {feed: 'reducer'})
     }
     cb()
   }

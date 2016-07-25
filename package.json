@@ -23,6 +23,7 @@
     "zero-fill": "^2.2.3"
   },
   "devDependencies": {
+    "html-entities": "^1.2.0",
     "markov": "0.0.7"
   }
 }

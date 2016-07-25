@@ -1,5 +1,9 @@
 module.exports = {
   _ns: 'zenbrain',
-  'thinkers.ebooks': require('./ebooks_thinker'),
-  'thinkers[]': '#thinkers.ebooks'
+  'thinkers.follow': require('./follow_thinker'),
+  'thinkers.reply': require('./reply_thinker'),
+  'thinkers[]': [
+    '#thinkers.follow',
+    '#thinkers.reply'
+  ]
 }

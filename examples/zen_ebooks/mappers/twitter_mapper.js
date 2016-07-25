@@ -1,3 +1,6 @@
+var Entities = require('html-entities').AllHtmlEntities
+var entities = new Entities()
+
 module.exports = function container (get, set, clear) {
   var map = get('map')
   var twitter = get('twitter')
@@ -13,10 +16,11 @@ module.exports = function container (get, set, clear) {
         map('twitter_status', {message: 'Disconnected from Twitter.'})
       })
       stream.on('message', function (message) {
-        map('twitter_message', message)
-        if (message.id_str) {
+        if (message.id_str && message.text) {
+          message.text = entities.decode(message.text)
           get('logger').info('tweet mapper', 'saw tweet', ('@' + message.user.screen_name).cyan, message.text.white, {feed: 'mapper'})
         }
+        map('twitter_message', message)
       })
       get('logger').info('tweet mapper', 'Mapping tweets...')
       cb()
