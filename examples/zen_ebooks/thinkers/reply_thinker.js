@@ -40,6 +40,7 @@ module.exports = function container (get, set, clear) {
       m.seed(tick.tweet_text, function () {
         tick.replies.forEach(function (reply) {
           var tweet_text = '@' + reply.user.screen_name + ' ' + sanitize(m.respond(reply.text).join(' '))
+          tweet_text = tweet_text.replace(/([\.\!\?\:])[^\.\!\?\:]+$/, '$1')
           if (tweet_text.length > 140) {
             tweet_text = tweet_text.substring(0, 139) + '-'
           }
@@ -52,6 +53,7 @@ module.exports = function container (get, set, clear) {
         })
         if (Math.random() <= config.new_tweet_chance) {
           var tweet_text = sanitize(m.fill(m.pick()).join(' '))
+          tweet_text = tweet_text.replace(/([\.\!\?\:])[^\.\!\?\:]+$/, '$1')
           if (tweet_text.length > 140) {
             tweet_text = tweet_text.substring(0, 139) + '-'
           }
