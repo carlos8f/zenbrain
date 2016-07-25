@@ -22,6 +22,7 @@ module.exports = function container (get, set, clear) {
       rs.full_tweet_text = rs.full_tweet_text.substring(rs.full_tweet_text.length - config.full_text_limit)
     }
     if (first_seed) {
+      first_seed = false
       request('https://gist.githubusercontent.com/carlos8f/f532005697acd6a335bea63d99b72ff3/raw/zen.txt', function (err, resp, body) {
         if (err) throw err
         if (resp.statusCode !== 200) {
