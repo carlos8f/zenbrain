@@ -1,4 +1,9 @@
 module.exports = {
+  mongo: {
+    url: 'mongodb://localhost:27017/zen_ebooks',
+    username: null,
+    password: null
+  },
   enabled_plugins: [
     'extras/twitter'
   ],
