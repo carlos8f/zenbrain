@@ -1,5 +1,5 @@
 module.exports = {
   _ns: 'zenbrain',
-  'reporters.console': require('./console_reporter'),
-  'reporters[]': '#reporters.console'
+  'reporters.tweet': require('./tweet_reporter'),
+  'reporters[]': '#reporters.tweet'
 }

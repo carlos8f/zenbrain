@@ -1,5 +1,5 @@
 module.exports = function container (get, set, clear) {
-  var c = get('constants')
+  var c = get('core.constants')
   var apply_funcs = get('utils.apply_funcs')
   return function apply_thinkers (tick, cb) {
     if (tick.size !== c.brain_speed) return cb()

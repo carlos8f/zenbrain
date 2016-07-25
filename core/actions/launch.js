@@ -11,8 +11,13 @@ module.exports = function container (get, set, clear) {
     if (args.length !== 1 || !args[0]) throw new Error('must provide one or more cmds')
     var cmds = args[0]
     var latch = 0
+    var commands = {}
+    get('commands').forEach(function (command) {
+      commands[command.name] = command
+    })
     cmds.forEach(function (cmd) {
-      var command = get('commands.' + cmd)
+      var command = commands[cmd]
+      if (!command) throw new Error('command not found: ' + cmd)
       var sub_args = [cmd]
       ;(command.options || []).forEach(function (option) {
         if (typeof options[option.name] !== 'undefined') {
@@ -20,7 +25,7 @@ module.exports = function container (get, set, clear) {
         }
       })
       ;(function respawn () {
-        var proc = spawn(path.resolve(__dirname, '../../../bin/zenbot'), sub_args, {stdio: 'inherit'})
+        var proc = spawn(process.argv[1], sub_args, {stdio: 'inherit'})
         proc.once('close', function (code) {
           if (code) {
             get('logger').info('launcher', 'cmd `' + cmd + '` exited with code ' + code + ', respawning now.')

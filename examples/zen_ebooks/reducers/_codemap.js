@@ -1,5 +1,5 @@
 module.exports = {
   _ns: 'zenbrain',
-  'reducers.tweet': require('./tweet_reducer'),
-  'reducers[]': '#reducers.tweet'
+  'reducers.twitter': require('./twitter_reducer'),
+  'reducers[]': '#reducers.twitter'
 }

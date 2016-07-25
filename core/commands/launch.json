@@ -1,1 +1,5 @@
-launch.json
+{
+  "name": "launch",
+  "spec": "launch [cmds...]",
+  "description": "launch multiple commands"
+}
