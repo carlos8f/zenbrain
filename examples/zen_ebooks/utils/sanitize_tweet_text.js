@@ -9,5 +9,7 @@ module.exports = function container (get, set, clear) {
       .replace(/http[^\s]+/g, '')
       // strip excessive whitespace
       .replace(/\s+/g, ' ')
+      // strip spaces before punc
+      .replace(/ [\.\?\!]/g, '.')
   }
 }
