@@ -10,6 +10,12 @@ module.exports = function container (get, set, clear) {
       // strip excessive whitespace
       .replace(/\s+/g, ' ')
       // strip spaces before punc
-      .replace(/ [\.\?\!]/g, '.')
+      .replace(/ ([\.\?\!\,\:])/g, '$1')
+      // turn late commas into ellipses
+      .replace(/(,)[^\.\!\?\:,]+$/, '...')
+      // end at last punctuation
+      .replace(/([\.\!\?\:])[^\.\!\?\:]+$/, '$1')
+      // colons into periods
+      .replace(/\:$/, '.')
   }
 }
