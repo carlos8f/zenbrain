@@ -44,7 +44,8 @@ var bad_patterns = [
   'the was ',
   'policies read ',
   'can essential ',
-
+  'has an ',
+  'an that ',
 ]
 
 module.exports = function container (get, set, clear) {
