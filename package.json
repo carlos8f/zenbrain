@@ -23,6 +23,7 @@
     "zero-fill": "^2.2.3"
   },
   "devDependencies": {
+    "bytes": "^2.4.0",
     "html-entities": "^1.2.0",
     "markov": "0.0.7",
     "micro-request": "^666.0.5",

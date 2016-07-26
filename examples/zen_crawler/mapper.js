@@ -7,7 +7,8 @@ var sig = require('sig')
 var parseUrl = require('url').parse
 var assert = require('assert')
 var robotsParser = require('robots-parser')
-var USER_AGENT = 'zen_crawler/' + version
+var USER_AGENT = 'zenbrain/' + version
+var bytes = require('bytes')
 
 module.exports = function container (get, set, clear) {
   var map = get('map')
@@ -40,6 +41,7 @@ module.exports = function container (get, set, clear) {
       get('thoughts').select({query: {key: robots_txt_id}, limit: 1}, function (err, result) {
         if (err) throw err
         if (result.length) {
+          get('logger').info('mapper', 'cached'.grey, robots_txt_url.grey)
           return withRobotsTxt(result[0].value.headers, result[0].value.body)
         }
         get('logger').info('mapper', 'fetching', robots_txt_url)
@@ -73,6 +75,7 @@ module.exports = function container (get, set, clear) {
         get('thoughts').select({query: {key: sig(current_url)}, limit: 1}, function (err, result) {
           if (err) throw err
           if (result.length) {
+            get('logger').info('mapper', 'cached'.grey, current_url.grey, result[0].value.headers.statusCode.grey)
             return setImmediate(getNext)
           }
           request(current_url, {headers: {'User-Agent': USER_AGENT}}, function (err, resp, body) {
@@ -80,14 +83,16 @@ module.exports = function container (get, set, clear) {
               get('logger').error('request err', current_url, err, {feed: 'errors'})
               return setImmediate(getNext)
             }
-            get('logger').info('mapper', 'crawled', current_url, resp.statusCode)
+            get('logger').info('mapper', 'crawled', current_url.white, resp.statusCode.blue, bytes(Buffer(body).length), (resp.headers['content-type'] || '').grey, run_state.queue.length, 'left')
             var linkCount = 0
             var is_base64 = false
             if (resp.statusCode === 200 && typeof body === 'string') {
-              get('logger').info('mapper', 'got ' + Buffer(body).length + ' bytes of text!', current_url)
               var links = body.match(/<a [^>]*href=('|")[^'"]+('|")[^>]*>/gi)
+              links = [resolveUrl(current_url, '/favicon.ico')].concat(links)
               if (links) {
+                var new_links = 0
                 links.forEach(function (link) {
+                  if (!link) return
                   function getAttr (name) {
                     var matches = link.match(new RegExp('<a [^>]*' + name + '=(?:\'|")([^\'"]+)(?:\'|")[^>]*>', 'i'))
                     return matches && matches[1]
@@ -99,9 +104,10 @@ module.exports = function container (get, set, clear) {
                   href = resolveUrl(current_url, href).replace(/#.*/, '')
                   if (run_state.queue.length < config.queue_limit && run_state.queue.indexOf(href) === -1) {
                     run_state.queue.push(href)
+                    new_links++
                   }
                 })
-                get('logger').info('mapper', 'found'.cyan, links.length, 'links.')
+                get('logger').info('mapper', 'found'.grey, new_links, 'new links.'.grey)
               }
             }
             else {
