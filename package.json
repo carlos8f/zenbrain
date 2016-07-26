@@ -25,6 +25,8 @@
   "devDependencies": {
     "html-entities": "^1.2.0",
     "markov": "0.0.7",
-    "micro-request": "^666.0.5"
+    "micro-request": "^666.0.5",
+    "robots-parser": "^1.0.0",
+    "sig": "^1.0.0"
   }
 }

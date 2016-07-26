@@ -10,6 +10,9 @@ module.exports = function container (get, set) {
     tasks.push(function (done) {
       get('db.mongo.db').collection('thoughts').ensureIndex({processed: 1}, done)
     })
+    tasks.push(function (done) {
+      get('db.mongo.db').collection('thoughts').ensureIndex({key: 1}, done)
+    })
     get('vendor.run-series')(tasks, cb)
   }
 }
