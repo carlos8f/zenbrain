@@ -13,14 +13,20 @@ var bytes = require('bytes')
 module.exports = function container (get, set, clear) {
   var map = get('map')
   var config = get('config').crawler
+  process.on('uncaughtException', function (err) {
+    get('logger').error('uncaught', err, {feed: 'errors'})
+  })
   if (!config) throw new Error('no config found. please add it to ~/.zenbrain/config-zen_crawler.js')
   return function mapper (cb) {
-    var run_state = get('run_state')
-    if (!run_state.queue || !run_state.queue.length) {
-      run_state.queue = [config.start_url]
+    var rs = get('run_state')
+    if (!rs.queue || !rs.queue.length) {
+      rs.queue = [config.start_url]
     }
-    ;(function getNext () {
-      var current_url = run_state.queue.shift()
+    for (var i = 0; i < require('os').cpus().length; i++) {
+      getNext()
+    }
+    function getNext () {
+      var current_url = rs.queue.shift()
       if (!current_url) {
         get('logger').info('mapper', 'done mapping. closing!')
         get('app').close(function () {
@@ -44,14 +50,16 @@ module.exports = function container (get, set, clear) {
           get('logger').info('mapper', 'cached'.grey, robots_txt_url.grey)
           return withRobotsTxt(result[0].value.headers, result[0].value.body)
         }
-        get('logger').info('mapper', 'fetching', robots_txt_url)
         request(robots_txt_url, {headers: {'User-Agent': USER_AGENT}}, function (err, resp, body) {
           if (err) {
             get('logger').error('request err', robots_txt_url, err, {feed: 'errors'})
             return setImmediate(getNext)
           }
+          get('logger').info('mapper', 'fetched', robots_txt_url, resp.statusCode)
           resp.headers.statusCode = resp.statusCode
           map(robots_txt_id, {url: robots_txt_url, headers: resp.headers, body: body, is_base64: false})
+          var favicon_url = robots_txt_url.replace('robots.txt', 'favicon.ico')
+          rs.queue.push(favicon_url)
           withRobotsTxt(resp.headers, body)
         })
       })
@@ -83,14 +91,13 @@ module.exports = function container (get, set, clear) {
               get('logger').error('request err', current_url, err, {feed: 'errors'})
               return setImmediate(getNext)
             }
-            get('logger').info('mapper', 'crawled', current_url.white, resp.statusCode.blue, bytes(Buffer(body).length), (resp.headers['content-type'] || '').grey, run_state.queue.length, 'left')
+            get('logger').info('mapper', 'crawled', current_url.white, resp.statusCode, bytes(Buffer(body).length), (resp.headers['content-type'] || '').grey, rs.queue.length, 'left')
             var linkCount = 0
             var is_base64 = false
             if (resp.statusCode === 200 && typeof body === 'string') {
               var links = body.match(/<a [^>]*href=('|")[^'"]+('|")[^>]*>/gi)
-              links = [resolveUrl(current_url, '/favicon.ico')].concat(links)
+              var new_links = 0
               if (links) {
-                var new_links = 0
                 links.forEach(function (link) {
                   if (!link) return
                   function getAttr (name) {
@@ -102,18 +109,18 @@ module.exports = function container (get, set, clear) {
                   var href = getAttr('href')
                   if (!href || href.match(/^#/)) return
                   href = resolveUrl(current_url, href).replace(/#.*/, '')
-                  if (run_state.queue.length < config.queue_limit && run_state.queue.indexOf(href) === -1) {
-                    run_state.queue.push(href)
+                  if (rs.queue.length < config.queue_limit && rs.queue.indexOf(href) === -1) {
+                    rs.queue.push(href)
                     new_links++
                   }
                 })
-                get('logger').info('mapper', 'found'.grey, new_links, 'new links.'.grey)
               }
+              get('logger').info('mapper', 'found'.grey, new_links, 'new links.'.grey)
             }
             else {
               get('logger').info('mapper', 'result', resp.statusCode, typeof body, body && body.length)
               if (resp.headers['location']) {
-                run_state.queue.push(resolveUrl(current_url, resp.headers['location']))
+                rs.queue.push(resolveUrl(current_url, resp.headers['location']))
               }
             }
             if (Buffer.isBuffer(body)) {
@@ -126,6 +133,6 @@ module.exports = function container (get, set, clear) {
           })
         })
       }
-    })()
+    }
   }
 }
