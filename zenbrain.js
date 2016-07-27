@@ -90,8 +90,11 @@ module.exports = function zenbrain (p, name) {
         if (err) cb(err)
         function onExit () {
           app.closing = true
+          setTimeout(function () {
+            process.exit()
+          }, 10000)
           process.on('uncaughtException', function (err) {
-            // ignore
+            process.exit()
           })
           app.close(function (err) {
             process.exit()

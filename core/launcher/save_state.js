@@ -5,6 +5,7 @@ module.exports = function container (get, set, clear) {
   var get_duration = get('utils.get_duration')
   return function save_state (cb) {
     var run_state = get('run_state')
+    get('logger').info('launcher', 'saving run_state, id = '.grey + run_state.id.cyan)
     if (!run_state) return cb()
     run_state.time = new Date().getTime()
     if (cb) {

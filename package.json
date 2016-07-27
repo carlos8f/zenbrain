@@ -18,6 +18,7 @@
     "numbro": "git+https://github.com/carlos8f/numbro.git",
     "os-monitor": "^1.0.4",
     "run-parallel": "^1.1.6",
+    "run-parallel-limit": "^1.0.3",
     "timebucket": "^0.3.4",
     "twit": "^2.2.4",
     "zero-fill": "^2.2.3"
@@ -27,7 +28,10 @@
     "html-entities": "^1.2.0",
     "markov": "0.0.7",
     "micro-request": "^666.0.5",
+    "rightpad": "^1.0.1",
     "robots-parser": "^1.0.0",
-    "sig": "^1.0.0"
+    "sig": "^1.0.0",
+    "unfluff": "^1.1.0",
+    "zero-fill": "^2.2.3"
   }
 }

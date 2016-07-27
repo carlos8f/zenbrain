@@ -12,5 +12,6 @@
   "brain_speed": "10s",
   "brain_speed_ms": 10000,
   "reducer_limit": 1000,
-  "save_state_interval": 10000
+  "save_state_interval": 10000,
+  "parallel_limit": 8
 }

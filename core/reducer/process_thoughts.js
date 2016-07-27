@@ -1,4 +1,4 @@
-var parallel = require('run-parallel')
+var parallel = require('run-parallel-limit')
   , tb = require('timebucket')
 
 module.exports = function container (get, set, clear) {
@@ -26,21 +26,41 @@ module.exports = function container (get, set, clear) {
           if (err) return done(err)
           t.tick = tick
           // upsert this tick
+          //console.error('merge tick', tick.id)
           merge_tick(t, done)
         })
       })
     })
-    parallel(tasks, function (err) {
+    parallel(tasks, c.parallel_limit, function (err) {
       if (err) return cb(err)
       // set processed flag for each thought
-      tasks = []
+      var sub_tasks = []
       thoughts.forEach(function (thought) {
-        tasks.push(function (done) {
+        sub_tasks.push(function (done) {
           thought.processed = true
-          get('thoughts').save(thought, done)
+          //console.error('save thought', thought.id)
+          try {
+            get('thoughts').save(thought, function (err) {
+              if (err) {
+                //console.error('save err')
+                throw err
+              }
+              setImmediate(done)
+            })
+          }
+          catch (e) {
+            //console.error('CAUGHT')
+            //console.error(thought)
+            //console.error(JSON.stringify(thought, null, 2))
+            return setImmediate(done)
+          }
         })
       })
-      parallel(tasks, cb)
+      parallel(sub_tasks, c.parallel_limit, function (err) {
+        if (err) return cb(err)
+        //console.error('done with')
+        setImmediate(cb)
+      })
     })
   }
 }

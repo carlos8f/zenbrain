@@ -1,5 +1,5 @@
 var colors = require('colors')
-  , parallel = require('run-parallel')
+  , parallel = require('run-parallel-limit')
 
 module.exports = function container (get, set, clear) {
   var twitter = get('twitter')
@@ -21,6 +21,6 @@ module.exports = function container (get, set, clear) {
       }
     })
     rs.follow_queue = []
-    parallel(tasks, cb)
+    parallel(tasks, c.parallel_limit, cb)
   }
 }

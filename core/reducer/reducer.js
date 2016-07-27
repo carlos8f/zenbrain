@@ -5,10 +5,14 @@ module.exports = function container (get, set, clear) {
   return function reducer (cb) {
     get('thoughts').select({query: {processed: false}, limit: c.reducer_limit}, function (err, thoughts) {
       if (err) return cb(err)
+      //console.error('processing thoughts...', thoughts.length)
       process_thoughts(thoughts, function (err) {
         if (err) return cb(err)
         // return if we are idle or not
-        return cb(null, !thoughts.length)
+        //console.error('processed thoughts', thoughts.length)
+        setImmediate(function () {
+          cb(null, !thoughts.length)
+        })
       })
     })
   }

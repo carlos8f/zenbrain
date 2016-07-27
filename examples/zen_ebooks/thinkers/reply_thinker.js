@@ -1,5 +1,4 @@
 var markov = require('markov')
-  , parallel = require('run-parallel')
   , request = require('micro-request')
   , assert = require('assert')
 
