@@ -43,7 +43,7 @@ module.exports = function container (get, set, clear) {
       }
     })
     events.forEach(function (event) {
-      if (event.event === 'follow' || event.event === 'quoted_tweet' || event.event === 'favorite') {
+      if (event.event === 'follow' || event.event === 'quoted_tweet' || event.event === 'favorite' || event.event === 'list_member_added') {
         if (rs.twitter_account && event.source.id_str !== rs.twitter_account.id_str) {
           tick.follows.push(event.source)
         }
