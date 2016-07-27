@@ -26,6 +26,11 @@ module.exports = function container (get, set, clear) {
     }).map(function (thought) {
       return thought.value.direct_message
     })
+    var friends = t.thoughts.filter(function (thought) {
+      return thought.key === 'twitter_friend' && thought.value
+    }).map(function (thought) {
+      return thought.value
+    })
     //get('logger').info('twitter reducer', 'thoughts', t.thoughts, {feed: 'reducer'})
     if (!tick.tweet_text) tick.tweet_text = ''
     if (!tick.replies) tick.replies = []
@@ -38,10 +43,16 @@ module.exports = function container (get, set, clear) {
       }
     })
     events.forEach(function (event) {
-      if (event.event === 'follow') {
+      if (event.event === 'follow' || event.event === 'quoted_tweet' || event.event === 'favorite') {
         if (rs.twitter_account && event.source.id_str !== rs.twitter_account.id_str) {
           tick.follows.push(event.source)
         }
+      }
+    })
+    friends.forEach(function (friend) {
+      if (friend.status) {
+        get('logger').info('tweet reducer', 'going to reply to new friends status:'.yellow, ('@' + friend.screen_name).cyan, friend.status.text.white)
+        tick.replies.push(friend.status)
       }
     })
     messages.forEach(function (direct_message) {
