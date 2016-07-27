@@ -13,6 +13,12 @@ module.exports = function container (get, set, clear) {
     var tick = t.tick
     t.thoughts.forEach(function (thought) {
       delete thought.root
+      if (thought.value.url) {
+        try {
+          thought.url = parseUrl(thought.value.url, true)
+        }
+        catch (e) {}
+      }
       //console.error('thought', thought.value.headers)
       if (thought.value.body && thought.value.headers['content-type'] && thought.value.headers['content-type'].match(/^text\/html/)) {
         if (thought.value.url.match(/wikipedia/)) {
