@@ -45,6 +45,20 @@ var bad_patterns = [
   'can essential ',
   'has an ',
   'an that ',
+  'is idea ',
+  'what have ',
+  'have listening ',
+  'you what ',
+  'happens This ',
+  ', out.',
+  ', him why',
+  'to Of',
+  'have sure ',
+  'asked chuckled ',
+  'and The ',
+  'an that ',
+  'in are ',
+  'an through '
 ]
 
 module.exports = function container (get, set, clear) {
