@@ -27,7 +27,7 @@ module.exports = function container (get, set, clear) {
           //get('logger').info('tweet mapper', 'message', message, {feed: 'mapper'})
         }
         if (message.event === 'favorite' || message.event === 'quoted_tweet' || message.event === 'follow') {
-          if (message.sender.id_str !== rs.twitter_account.id_str) {
+          if ((message.source || message.sender).id_str !== rs.twitter_account.id_str) {
             // look up their latest status...
             twitter.get('users/show', {user_id: message.source.id_str}, function (err, data, resp) {
               if (err) {
