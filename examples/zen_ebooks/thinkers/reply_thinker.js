@@ -71,6 +71,9 @@ module.exports = function container (get, set, clear) {
     if (!rs.tweet_queue) {
       rs.tweet_queue = []
     }
+    if (!rs.message_queue) {
+      rs.message_queue = []
+    }
     if (!rs.full_tweet_text) {
       rs.full_tweet_text = ''
     }
@@ -126,6 +129,15 @@ module.exports = function container (get, set, clear) {
           rs.tweet_queue.push({
             text: tweet_text,
             in_reply_to_status_id: reply.id_str
+          })
+        })
+        tick.messages.forEach(function (direct_message) {
+          var reply_text = validateReply(function () {
+            return m.respond(direct_message.text).join(' ')
+          })
+          rs.message_queue.push({
+            text: reply_text,
+            direct_message: direct_message
           })
         })
         if (Math.random() <= config.new_tweet_chance) {
