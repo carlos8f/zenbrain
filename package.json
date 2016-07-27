@@ -28,6 +28,7 @@
     "html-entities": "^1.2.0",
     "markov": "0.0.7",
     "micro-request": "^666.0.5",
+    "minimatch": "^3.0.2",
     "rightpad": "^1.0.1",
     "robots-parser": "^1.0.0",
     "sig": "^1.0.0",

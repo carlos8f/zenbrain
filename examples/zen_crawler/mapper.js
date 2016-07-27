@@ -9,6 +9,7 @@ var assert = require('assert')
 var robotsParser = require('robots-parser')
 var USER_AGENT = 'zenbrain/' + version
 var bytes = require('bytes')
+var minimatch = require('minimatch')
 
 module.exports = function container (get, set, clear) {
   var map = get('map')
@@ -42,6 +43,9 @@ module.exports = function container (get, set, clear) {
       try {
         var parsedUrl = parseUrl(current_url)
         assert(parsedUrl.protocol.match(/^http/))
+        config.blacklist.forEach(function (pat) {
+          assert(!minimatch(parsedUrl.hostname, pat))
+        })
       }
       catch (e) {
         return getNext()

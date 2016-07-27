@@ -6,6 +6,10 @@ module.exports = {
   },
   crawler: {
     start_url: 'https://s8f.org/',
-    queue_limit: 100000
+    queue_limit: 100000,
+    blacklist: [
+      '*.wikipedia.org',
+      'twitter.com'
+    ]
   }
 }
