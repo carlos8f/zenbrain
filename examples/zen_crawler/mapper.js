@@ -22,16 +22,20 @@ module.exports = function container (get, set, clear) {
     if (!rs.queue || !rs.queue.length) {
       rs.queue = [config.start_url]
     }
+    var num_active = 0
     for (var i = 0; i < require('os').cpus().length; i++) {
+      num_active++
       getNext()
     }
     function getNext () {
       var current_url = rs.queue.shift()
       if (!current_url) {
-        get('logger').info('mapper', 'done mapping. closing!')
-        get('app').close(function () {
-          process.exit()
-        })
+        if (!--num_active) {
+          get('logger').info('mapper', 'done mapping. closing!')
+          get('app').close(function () {
+            process.exit()
+          })
+        }
         return
       }
       var cache_key = sig(current_url)
