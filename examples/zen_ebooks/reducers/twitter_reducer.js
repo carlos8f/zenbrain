@@ -51,9 +51,11 @@ module.exports = function container (get, set, clear) {
     })
     friends.forEach(function (friend) {
       if (friend.status) {
-        tick.replies.push(friend.status)
+        var tweet = JSON.parse(JSON.stringify(friend.status))
+        tweet.user = friend
+        tick.replies.push(tweet)
         if (tick.size === c.brain_speed) {
-          get('logger').info('tweet reducer', 'going to reply to new friends status:'.yellow, ('@' + friend.screen_name).cyan, friend.status.text.white)
+          get('logger').info('tweet reducer', 'going to reply to new friends status:'.yellow, ('@' + friend.screen_name).cyan, tweet.text.white)
         }
       }
     })
