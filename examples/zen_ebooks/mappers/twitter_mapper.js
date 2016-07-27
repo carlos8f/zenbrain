@@ -20,6 +20,9 @@ module.exports = function container (get, set, clear) {
           message.text = entities.decode(message.text)
           get('logger').info('tweet mapper', 'saw tweet', ('@' + message.user.screen_name).cyan, message.text.white, {feed: 'mapper'})
         }
+        else if (message.event) {
+          get('logger').info('tweet mapper', 'saw event', message, {feed: 'mapper'})
+        }
         map('twitter_message', message)
       })
       get('logger').info('tweet mapper', 'Mapping tweets...')
