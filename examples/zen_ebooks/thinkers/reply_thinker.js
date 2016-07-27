@@ -118,14 +118,14 @@ module.exports = function container (get, set, clear) {
         }
         return reply_text
       }
-      //get('logger').info('ebooks thinker', 'input', tick.tweet_text.white)
+      get('logger').info('ebooks thinker', 'input', tick.tweet_text.white, tick.replies.length, 'replies')
       m.seed(tick.tweet_text, function () {
         tick.replies.forEach(function (reply) {
           var reply_text = validateReply(function () {
             return m.respond(reply.text).join(' ')
           })
           var tweet_text = '@' + reply.user.screen_name + ' ' + reply_text
-          //get('logger').info('ebooks thinker', 'reply', tweet_text.white)
+          get('logger').info('ebooks thinker', 'reply', tweet_text.white)
           rs.tweet_queue.push({
             text: tweet_text,
             in_reply_to_status_id: reply.id_str
