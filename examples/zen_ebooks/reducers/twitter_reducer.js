@@ -37,19 +37,26 @@ module.exports = function container (get, set, clear) {
     if (!tick.follows) tick.follows = []
     if (!tick.messages) tick.messages = []
     tweets.forEach(function (tweet) {
+      // reply to replies
       tick.tweet_text += tweet.text + '\n'
       if (rs.twitter_account && tweet.in_reply_to_user_id_str === rs.twitter_account.id_str && tweet.user.id_str !== rs.twitter_account.id_str) {
         tick.replies.push(tweet)
       }
     })
     events.forEach(function (event) {
+      // follow people
       if (event.event === 'follow' || event.event === 'quoted_tweet' || event.event === 'favorite' || event.event === 'list_member_added') {
         if (rs.twitter_account && event.source.id_str !== rs.twitter_account.id_str) {
           tick.follows.push(event.source)
         }
       }
+      // reply to tweets I favorite
+      if (event.event === 'favorite' && event.source.id_str === rs.twitter_account.id_str) {
+        tick.replies.push(event.target_object)
+      }
     })
     friends.forEach(function (friend) {
+      // tweet at new friends
       if (friend.status) {
         var tweet = JSON.parse(JSON.stringify(friend.status))
         tweet.user = friend
@@ -60,6 +67,7 @@ module.exports = function container (get, set, clear) {
       }
     })
     messages.forEach(function (direct_message) {
+      // answer messages
       if (rs.twitter_account && direct_message.sender.id_str !== rs.twitter_account.id_str) {
         tick.messages.push(direct_message)
         if (tick.size === c.brain_speed) {
