@@ -24,7 +24,6 @@ module.exports = function container (get, set, clear) {
     var messages = t.thoughts.filter(function (thought) {
       return thought.key === 'twitter_message' && thought.value.direct_message
     }).map(function (thought) {
-      get('logger').info('tweet reducer', 'got pm:'.yellow, thought.value.direct_message.text.white)
       return thought.value.direct_message
     })
     //get('logger').info('twitter reducer', 'thoughts', t.thoughts, {feed: 'reducer'})
@@ -47,6 +46,9 @@ module.exports = function container (get, set, clear) {
     })
     messages.forEach(function (direct_message) {
       tick.messages.push(direct_message)
+      if (tick.size === c.brain_speed) {
+        get('logger').info('tweet reducer', 'got pm:'.yellow, ('@' + direct_message.sender.screen_name).cyan, direct_message.text.white)
+      }
     })
     if (tick.size === c.brain_speed) {
       //get('logger').info('twitter reducer', 'reduced', tick, {feed: 'reducer'})
