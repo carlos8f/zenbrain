@@ -78,7 +78,7 @@ module.exports = function container (get, set, clear) {
       rs.full_tweet_text = ''
     }
     //get('logger').info('ebooks thinker', 'tick', tick, {feed: 'ticks'})
-    if (!tick.tweet_text) return cb()
+    //if (!tick.tweet_text) return cb()
     rs.full_tweet_text += tick.tweet_text + '\n'
     if (rs.full_tweet_text.length > config.full_text_limit) {
       rs.full_tweet_text = rs.full_tweet_text.substring(rs.full_tweet_text.length - config.full_text_limit)
