@@ -18,10 +18,13 @@ module.exports = function container (get, set, clear) {
       stream.on('message', function (message) {
         if (message.id_str && message.text) {
           message.text = entities.decode(message.text)
-          get('logger').info('tweet mapper', 'saw tweet', ('@' + message.user.screen_name).cyan, message.text.white, {feed: 'mapper'})
+          get('logger').info('tweet mapper', 'tweet', ('@' + message.user.screen_name).cyan, message.text.white, {feed: 'mapper'})
         }
         else if (message.event) {
-          get('logger').info('tweet mapper', 'saw event', message, {feed: 'mapper'})
+          get('logger').info('tweet mapper', 'event', message, {feed: 'mapper'})
+        }
+        else {
+          get('logger').info('tweet mapper', 'message', message, {feed: 'mapper'})
         }
         map('twitter_message', message)
       })
