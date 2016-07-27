@@ -45,9 +45,11 @@ module.exports = function container (get, set, clear) {
       }
     })
     messages.forEach(function (direct_message) {
-      tick.messages.push(direct_message)
-      if (tick.size === c.brain_speed) {
-        get('logger').info('tweet reducer', 'got pm:'.yellow, ('@' + direct_message.sender.screen_name).cyan, direct_message.text.white)
+      if (rs.twitter_account && direct_message.sender.id_str !== rs.twitter_account.id_str) {
+        tick.messages.push(direct_message)
+        if (tick.size === c.brain_speed) {
+          get('logger').info('tweet reducer', 'got pm:'.yellow, ('@' + direct_message.sender.screen_name).cyan, direct_message.text.white)
+        }
       }
     })
     if (tick.size === c.brain_speed) {
