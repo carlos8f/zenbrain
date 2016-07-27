@@ -51,8 +51,10 @@ module.exports = function container (get, set, clear) {
     })
     friends.forEach(function (friend) {
       if (friend.status) {
-        get('logger').info('tweet reducer', 'going to reply to new friends status:'.yellow, ('@' + friend.screen_name).cyan, friend.status.text.white)
         tick.replies.push(friend.status)
+        if (tick.size === c.brain_speed) {
+          get('logger').info('tweet reducer', 'going to reply to new friends status:'.yellow, ('@' + friend.screen_name).cyan, friend.status.text.white)
+        }
       }
     })
     messages.forEach(function (direct_message) {
