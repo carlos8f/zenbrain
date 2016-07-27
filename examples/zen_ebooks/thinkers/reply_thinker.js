@@ -133,6 +133,7 @@ module.exports = function container (get, set, clear) {
         })
         tick.messages.forEach(function (direct_message) {
           var reply_text = validateReply(function () {
+            console.error('direct_message', direct_message)
             return m.respond(direct_message.text).join(' ')
           })
           rs.message_queue.push({

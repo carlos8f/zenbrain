@@ -28,7 +28,6 @@ module.exports = function container (get, set, clear) {
         })
       }
     }))
-    console.error('tasks', tasks)
     rs.tweet_queue = []
     rs.message_queue = []
     parallel(tasks, c.parallel_limit, cb)
