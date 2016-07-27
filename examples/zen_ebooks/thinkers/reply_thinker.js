@@ -118,7 +118,7 @@ module.exports = function container (get, set, clear) {
         }
         return reply_text
       }
-      get('logger').info('ebooks thinker', 'input', tick.tweet_text.white, tick.replies.length, 'replies')
+      //get('logger').info('ebooks thinker', 'input', tick.tweet_text.white, tick.replies.length, 'replies')
       m.seed(tick.tweet_text, function () {
         tick.replies.forEach(function (reply) {
           var reply_text = validateReply(function () {
