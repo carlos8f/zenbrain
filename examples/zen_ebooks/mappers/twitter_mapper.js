@@ -21,10 +21,10 @@ module.exports = function container (get, set, clear) {
           get('logger').info('tweet mapper', 'tweet', ('@' + message.user.screen_name).cyan, message.text.white, {feed: 'mapper'})
         }
         else if (message.event) {
-          get('logger').info('tweet mapper', 'event', message, {feed: 'mapper'})
+          get('logger').info('tweet mapper', 'event', message.event, {feed: 'mapper'})
         }
         else {
-          get('logger').info('tweet mapper', 'message', message, {feed: 'mapper'})
+          //get('logger').info('tweet mapper', 'message', message, {feed: 'mapper'})
         }
         map('twitter_message', message)
       })

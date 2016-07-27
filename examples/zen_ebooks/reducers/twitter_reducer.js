@@ -1,3 +1,5 @@
+var colors = require('colors')
+
 module.exports = function container (get, set, clear) {
   var c = get('core.constants')
   return function reducer (t, cb) {
@@ -22,7 +24,8 @@ module.exports = function container (get, set, clear) {
     var messages = t.thoughts.filter(function (thought) {
       return thought.key === 'twitter_message' && thought.value.direct_message
     }).map(function (thought) {
-      return thought.value
+      get('logger').info('tweet reducer', 'got pm:'.yellow, thought.value.direct_message.text.white)
+      return thought.value.direct_message
     })
     //get('logger').info('twitter reducer', 'thoughts', t.thoughts, {feed: 'reducer'})
     if (!tick.tweet_text) tick.tweet_text = ''

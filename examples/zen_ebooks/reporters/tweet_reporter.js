@@ -22,7 +22,6 @@ module.exports = function container (get, set, clear) {
       return function task (done) {
         twitter.post('direct_messages/new', {user_id: info.direct_message.sender.id_str, text: info.text}, function (err, data, resp) {
           if (err) return done(err)
-          get('logger').info('tweet reporter', 'got pm:'.yellow, info.direct_message.text.white)
           get('logger').info('tweet reporter', 'replied:'.cyan, data.text.white)
           done(null, data)
         })
