@@ -47,7 +47,7 @@ module.exports = function container (get, set, clear) {
             mark_complete(new Date().getTime(), tick_size, function (err) {
               if (err) throw err
               if (!currently_idle) {
-                get('logger').info('run', tick_size, 'idle'.grey)
+                //get('logger').info('run', tick_size, 'idle'.grey)
                 currently_idle = true
               }
               setTimeout(getNext, c.brain_speed_ms / 2)
