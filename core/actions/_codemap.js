@@ -6,7 +6,7 @@ module.exports = {
   map: require('./map'),
   reduce: require('./reduce'),
   run: require('./run'),
-  //status: require('./status')
+  status: require('./status'),
 
   'zenbrain:reducers': []
 }

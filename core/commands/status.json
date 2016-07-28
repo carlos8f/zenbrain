@@ -1,1 +1,5 @@
-status.json
+{
+  "name": "status",
+  "spec": "status",
+  "description": "status"
+}
