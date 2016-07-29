@@ -13,15 +13,14 @@ var minimatch = require('minimatch')
 
 module.exports = function container (get, set, clear) {
   var map = get('map')
-  var config = get('config').crawler
+  var c = get('config')
   process.on('uncaughtException', function (err) {
     get('logger').error('uncaught', err, {feed: 'errors'})
   })
-  if (!config) throw new Error('no config found. please add it to ~/.zenbrain/config-zen_crawler.js')
   return function mapper (cb) {
     var rs = get('run_state')
     if (!rs.queue || !rs.queue.length) {
-      rs.queue = [config.start_url]
+      rs.queue = [c.crawler_start_url]
     }
     var num_active = 0
     for (var i = 0; i < require('os').cpus().length; i++) {
@@ -43,7 +42,7 @@ module.exports = function container (get, set, clear) {
       try {
         var parsedUrl = parseUrl(current_url)
         assert(parsedUrl.protocol.match(/^http/))
-        config.blacklist.forEach(function (pat) {
+        c.crawler_blacklist.forEach(function (pat) {
           assert(!minimatch(parsedUrl.hostname, pat))
         })
       }
@@ -52,7 +51,7 @@ module.exports = function container (get, set, clear) {
       }
       var robots_txt_url = resolveUrl(parsedUrl.protocol + '//' + parsedUrl.host, '/robots.txt')
       var robots_txt_id = sig(robots_txt_url)
-      get('thoughts').select({query: {key: robots_txt_id}, limit: 1}, function (err, result) {
+      get('thoughts').select({query: {app_name: get('app_name'), key: robots_txt_id}, limit: 1}, function (err, result) {
         if (err) throw err
         if (result.length) {
           get('logger').info('mapper', 'cached'.grey, robots_txt_url.grey)
@@ -88,7 +87,7 @@ module.exports = function container (get, set, clear) {
           get('logger').info('mapper', 'disallowed'.red, current_url.grey)
           return setImmediate(getNext)
         }
-        get('thoughts').select({query: {key: sig(current_url)}, limit: 1}, function (err, result) {
+        get('thoughts').select({query: {app_name: get('app_name'), key: sig(current_url)}, limit: 1}, function (err, result) {
           if (err) throw err
           if (result.length) {
             get('logger').info('mapper', 'cached'.grey, current_url.grey, result[0].value.headers.statusCode.grey)
@@ -117,7 +116,7 @@ module.exports = function container (get, set, clear) {
                   var href = getAttr('href')
                   if (!href || href.match(/^#/)) return
                   href = resolveUrl(current_url, href).replace(/#.*/, '')
-                  if (rs.queue.length < config.queue_limit && rs.queue.indexOf(href) === -1) {
+                  if (rs.queue.length < c.crawler_queue_limit && rs.queue.indexOf(href) === -1) {
                     rs.queue.push(href)
                     new_links++
                   }

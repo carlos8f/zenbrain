@@ -1,7 +1,7 @@
 var colors = require('colors')
 
 module.exports = function container (get, set, clear) {
-  var c = get('core.constants')
+  var c = get('config')
   return function reducer (t, cb) {
     var rs = get('run_state')
     var tick = t.tick

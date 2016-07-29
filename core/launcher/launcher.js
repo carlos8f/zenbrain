@@ -2,15 +2,15 @@ var n = require('numbro')
   , tb = require('timebucket')
 
 module.exports = function container (get, set, clear) {
-  var c = get('core.constants')
+  var c = get('config')
   return function launcher (action) {
     return function () {
       var args = [].slice.call(arguments)
-      var command = get('command')
-      get('run_states').load(command, function (err, run_state) {
+      var run_state_id = get('app_name') + '_' + get('command')
+      get('run_states').load(run_state_id, function (err, run_state) {
         if (err) throw err
         run_state || (run_state = {
-          id: command,
+          id: run_state_id,
           time: new Date().getTime(),
           total_us: 0
         })

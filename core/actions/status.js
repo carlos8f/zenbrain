@@ -1,7 +1,7 @@
 var parallel = require('run-parallel-limit')
 
 module.exports = function container (get, set, clear) {
-  var c = get('core.constants')
+  var c = get('config')
   return function status (options) {
     var ret = {
       thoughts: 0,
@@ -11,7 +11,7 @@ module.exports = function container (get, set, clear) {
     var tasks = []
     Object.keys(ret).forEach(function (k) {
       tasks.push(function (done) {
-        get('db').collection(k).count(function (err, result) {
+        get('db').collection(k).count({app_name: get('app_name')}, function (err, result) {
           if (err) return done(err)
           ret[k] = result
           done()

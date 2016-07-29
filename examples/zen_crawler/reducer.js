@@ -5,7 +5,7 @@ var extractor = require('unfluff')
   , rp = require('rightpad')
 
 module.exports = function container (get, set, clear) {
-  var c = get('core.constants')
+  var c = get('config')
   //console.error("outside")
   return function reducer (t, cb) {
     //console.error('reducing', t.tick.id)
@@ -24,7 +24,7 @@ module.exports = function container (get, set, clear) {
         if (thought.value.url.match(/wikipedia/)) {
           //return
         }
-        var meta = JSON.parse(JSON.stringify(extractor(thought.value.body, 'en')))
+        var meta = extractor(thought.value.body, 'en')
         if (meta && meta.title) {
           Object.keys(meta).forEach(function (k) {
             if (typeof meta[k] === 'undefined') {

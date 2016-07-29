@@ -2,7 +2,7 @@ var colors = require('colors')
 
 module.exports = function container (get, set, clear) {
   var reducer = get('reducer')
-  var c = get('core.constants')
+  var c = get('config')
   var currently_idle = false
   return function reduce () {
     reducer(function (err, idle) {

@@ -3,6 +3,7 @@ module.exports = function container (get, set) {
   var apply_funcs = get('zenbrain:utils.apply_funcs')
   return get('db.createCollection')('run_states', {
     save: function (obj, opts, cb) {
+      obj.app_name = get('zenbrain:app_name')
       obj.timestamp = get_timestamp(obj.time)
       apply_funcs({op: 'save', type: 'run_state', obj: obj}, get('zenbrain:db_hooks'), cb)
     }

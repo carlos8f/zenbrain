@@ -1,5 +1,5 @@
 module.exports = function container (get, set, clear) {
-  var c = get('core.constants')
+  var c = get('config')
   var series = get('motley:vendor.run-series')
   var mark_complete = get('utils.mark_complete')
   return function run () {
@@ -11,6 +11,7 @@ module.exports = function container (get, set, clear) {
       ;(function getNext () {
         var params = {
           query: {
+            app_name: get('app_name'),
             complete: true,
             seen: false,
             size: tick_size,

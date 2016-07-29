@@ -32,7 +32,6 @@
     "rightpad": "^1.0.1",
     "robots-parser": "^1.0.0",
     "sig": "^1.0.0",
-    "unfluff": "^1.1.0",
-    "zero-fill": "^2.2.3"
+    "unfluff": "^1.1.0"
   }
 }

@@ -2,7 +2,7 @@ var parallel = require('run-parallel-limit')
   , tb = require('timebucket')
 
 module.exports = function container (get, set, clear) {
-  var c = get('core.constants')
+  var c = get('config')
   var merge_tick = get('reducer.merge_tick')
   var get_timestamp = get('utils.get_timestamp')
   return function process_thoughts (thoughts, cb) {
@@ -22,7 +22,7 @@ module.exports = function container (get, set, clear) {
       var t = ticks[tickId]
       // for each bucket, load existing tick
       tasks.push(function (done) {
-        get('motley:db.ticks').load(tickId, function (err, tick) {
+        get('motley:db.ticks').load(get('app_name') + '_' + tickId, function (err, tick) {
           if (err) return done(err)
           t.tick = tick
           // upsert this tick

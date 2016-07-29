@@ -80,7 +80,7 @@ module.exports = function container (get, set, clear) {
   var m = markov()
   var sanitize = get('utils.sanitize_tweet_text')
   var first_seed = true
-  var config = get('config')
+  var c = get('config')
   return function thinker (tick, cb) {
     var rs = get('run_state')
     if (!rs.tweet_queue) {
@@ -96,7 +96,7 @@ module.exports = function container (get, set, clear) {
     //if (!tick.tweet_text) return cb()
     rs.full_tweet_text += tick.tweet_text + '\n'
     if (rs.full_tweet_text.length > config.full_text_limit) {
-      rs.full_tweet_text = rs.full_tweet_text.substring(rs.full_tweet_text.length - config.full_text_limit)
+      rs.full_tweet_text = rs.full_tweet_text.substring(rs.full_tweet_text.length - c.ebooks_full_text_limit)
     }
     if (first_seed) {
       first_seed = false
@@ -156,7 +156,9 @@ module.exports = function container (get, set, clear) {
             direct_message: direct_message
           })
         })
-        if (Math.random() <= config.new_tweet_chance) {
+        var roll = Math.random()
+        get('logger').info('ebooks thinker', 'roll', roll, '/', c.ebooks_new_tweet_chance)
+        if (roll <= c.ebooks_new_tweet_chance) {
           var tweet_text = validateReply(function () {
             return m.fill(m.pick()).join(' ')
           })

@@ -3,28 +3,23 @@ var commander = require('commander')
 var make_config = require('./utils/make_config')
 var path = require('path')
 
-module.exports = function zenbrain (p, name) {
+module.exports = function zenbrain (p, app_name) {
   p = path.resolve(p)
   return {
     get_version: function () {
       try {
-        return require(p + '/package.json').version
+        return require(path.join(p, 'package.json')).version
       }
       catch (e) {
         return '0.0.0'
       }
     },
     get_config: function () {
-      var config = make_config(path.join(__dirname, 'config-core-sample.js'))
-      try {
-        var more_config = make_config(path.join(p, 'config-' + name + '-sample.js'))
-        Object.keys(more_config).forEach(function (k) {
-          config[k] = more_config[k]
-        })
-      }
-      catch (e) {
-        throw e
-      }
+      var config = require('./config.js')
+      var more_config = require(path.join(p, 'config.js'))
+      Object.keys(more_config).forEach(function (k) {
+        config[k] = more_config[k]
+      })
       return config
     },
     get_codemaps: function () {
@@ -39,7 +34,6 @@ module.exports = function zenbrain (p, name) {
               map = require('./' + plugin + '/_codemap')
             }
             catch (e) {
-              throw e
               if (e.code === 'MODULE_NOT_FOUND') {
                 throw new Error('plugin `' + plugin + '` could not be found.')
               }
@@ -58,7 +52,7 @@ module.exports = function zenbrain (p, name) {
         _ns: 'zenbrain',
         _maps: this.get_codemaps(),
         root: p,
-        'core.constants': require('./constants.json'),
+        app_name: app_name,
         config: this.get_config()
       })
     },
@@ -92,7 +86,7 @@ module.exports = function zenbrain (p, name) {
           app.closing = true
           setTimeout(function () {
             process.exit()
-          }, 10000)
+          }, 5000)
           process.on('uncaughtException', function (err) {
             process.exit()
           })

@@ -5,6 +5,7 @@ module.exports = function container (get, set) {
   return get('db.createCollection')('logs', {
     save: function (obj, opts, cb) {
       if (!obj.id) obj.id = get_id()
+      obj.app_name = get('zenbrain:app_name')
       obj.timestamp = get_timestamp(obj.time)
       apply_funcs({op: 'save', type: 'log', obj: obj}, get('zenbrain:db_hooks'), cb)
     }
