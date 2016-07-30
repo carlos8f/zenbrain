@@ -18,7 +18,7 @@ module.exports = function container (get, set, clear) {
       }
       setTimeout(function () {
         reduce()
-      }, idle ? c.brain_speed_ms : 0)
+      }, idle ? c.reduce_timeout : 0)
     })
   }
 }

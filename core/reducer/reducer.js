@@ -6,13 +6,12 @@ module.exports = function container (get, set, clear) {
     get('thoughts').select({query: {app_name: get('app_name'), processed: false}, limit: c.reducer_limit}, function (err, thoughts) {
       if (err) return cb(err)
       //console.error('processing thoughts...', thoughts.length)
-      process_thoughts(thoughts, function (err) {
+      if (!thoughts.length) {
+        return cb(null, true)
+      }
+      process_thoughts(thoughts, function (err, idle) {
         if (err) return cb(err)
-        // return if we are idle or not
-        //console.error('processed thoughts', thoughts.length)
-        setImmediate(function () {
-          cb(null, !thoughts.length)
-        })
+        cb(null, false)
       })
     })
   }

@@ -22,7 +22,7 @@ module.exports = function container (get, set, clear) {
       var t = ticks[tickId]
       // for each bucket, load existing tick
       tasks.push(function (done) {
-        get('motley:db.ticks').load(get('app_name') + '_' + tickId, function (err, tick) {
+        get('ticks').load(get('app_name') + '_' + tickId, function (err, tick) {
           if (err) return done(err)
           t.tick = tick
           // upsert this tick
@@ -56,11 +56,7 @@ module.exports = function container (get, set, clear) {
           }
         })
       })
-      parallel(sub_tasks, c.parallel_limit, function (err) {
-        if (err) return cb(err)
-        //console.error('done with')
-        setImmediate(cb)
-      })
+      parallel(sub_tasks, c.parallel_limit, cb)
     })
   }
 }

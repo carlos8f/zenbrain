@@ -24,7 +24,7 @@ module.exports = function container (get, set, clear) {
       return tick.thought_ids.indexOf(thought.id) === -1
     })
     if (!thoughts.length) {
-      console.error('no new thoughts', t.tick.id)
+      //console.error('no new thoughts', t.tick.id)
       return cb()
     }
     //console.error('reducing', t.tick.id)
@@ -38,10 +38,7 @@ module.exports = function container (get, set, clear) {
     // apply reducers to this tick
     apply_funcs(t, get('reducers'), function (err) {
       if (err) return cb(err)
-      get('ticks').save(tick, function (err) {
-        if (err) return cb(err)
-        setImmediate(cb)
-      })
+      get('ticks').save(tick, cb)
     })
   }
 }

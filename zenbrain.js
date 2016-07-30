@@ -26,7 +26,7 @@ module.exports = function zenbrain (p, app_name) {
       return this.get_config().enabled_plugins.map(function (plugin) {
         var map
         try {
-          map = require(path.join(p, plugin, '_codemap'))
+          map = require(path.join(p, 'plugins', plugin, '_codemap'))
         }
         catch (e) {
           if (e.code === 'MODULE_NOT_FOUND') {
