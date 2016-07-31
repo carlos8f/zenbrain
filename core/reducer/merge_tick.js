@@ -3,6 +3,7 @@ var tb = require('timebucket')
 module.exports = function container (get, set, clear) {
   var apply_funcs = get('utils.apply_funcs')
   return function merge_tick (t, cb) {
+    var before = new Date().getTime()
     if (!t.tick) {
       // init tick
       var bucket = tb(t.thoughts[0].time).resize(t.size)
@@ -36,9 +37,16 @@ module.exports = function container (get, set, clear) {
     })
     t.thoughts = thoughts
     // apply reducers to this tick
+    //get('logger').info('after thought filter', new Date().getTime() - before, 'ms')
+    before = new Date().getTime()
     apply_funcs(t, get('reducers'), function (err) {
+      //get('logger').info('after reducers', new Date().getTime() - before, 'ms')
       if (err) return cb(err)
-      get('ticks').save(tick, cb)
+      get('ticks').save(tick, function (err) {
+        if (err) return cb(err)
+        //get('logger').info('after save', new Date().getTime() - before, 'ms')
+        cb()
+      })
     })
   }
 }

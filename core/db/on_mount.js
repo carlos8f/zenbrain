@@ -14,7 +14,7 @@ module.exports = function container (get, set) {
       get('db.mongo.db').collection('thoughts').ensureIndex({app_name: 1, processed: 1}, done)
     })
     tasks.push(function (done) {
-      get('db.mongo.db').collection('thoughts').ensureIndex({app_name: 1, key: 1}, done)
+      get('db.mongo.db').collection('thoughts').ensureIndex({app_name: 1, key: 1, time: 1}, done)
     })
     parallel(tasks, c.parallel_limit, cb)
   }

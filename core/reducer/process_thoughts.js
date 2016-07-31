@@ -22,41 +22,47 @@ module.exports = function container (get, set, clear) {
       var t = ticks[tickId]
       // for each bucket, load existing tick
       tasks.push(function (done) {
+        var before = new Date().getTime()
         get('ticks').load(get('app_name') + '_' + tickId, function (err, tick) {
           if (err) return done(err)
           t.tick = tick
+          //get('logger').info('after tick load', new Date().getTime() - before, 'ms')
           // upsert this tick
           //console.error('merge tick', tick.id)
-          merge_tick(t, done)
+          //var before = new Date().getTime()
+          merge_tick(t, function (err) {
+            if (err) return done(err)
+            //get('logger').info('after merge_tick', new Date().getTime() - before, 'ms')
+            done()
+          })
         })
       })
     })
+    var before = new Date().getTime()
     parallel(tasks, c.parallel_limit, function (err) {
+      //get('logger').info('process thoughts', new Date().getTime() - before, 'ms', 'for', tasks.length, 'tasks')
       if (err) return cb(err)
       // set processed flag for each thought
-      var sub_tasks = []
-      thoughts.forEach(function (thought) {
-        sub_tasks.push(function (done) {
-          thought.processed = true
-          //console.error('save thought', thought.id)
-          try {
-            get('thoughts').save(thought, function (err) {
-              if (err) {
-                //console.error('save err')
-                throw err
-              }
-              setImmediate(done)
-            })
-          }
-          catch (e) {
-            //console.error('CAUGHT')
-            //console.error(thought)
-            //console.error(JSON.stringify(thought, null, 2))
-            return setImmediate(done)
-          }
-        })
+      var ids = thoughts.map(function (thought) {
+        return thought.id
       })
-      parallel(sub_tasks, c.parallel_limit, cb)
+      get('db').collection('thoughts').update({
+        _id: {$in: ids},
+        processed: false,
+        app_name: get('app_name')
+      },
+      {
+        $set: {
+          processed: true
+        }
+      }, {
+        multi: true
+      },
+      function (err, result) {
+        if (err) return cb(err)
+        //get('logger').info('after saves', new Date().getTime() - before, 'ms', result, thoughts.length, 'thoughts', {feed: 'reducer'})
+        cb()
+      })
     })
   }
 }
