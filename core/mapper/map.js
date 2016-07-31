@@ -7,7 +7,7 @@ module.exports = function container (get, set, clear) {
       key = null
     }
     var thought = {
-      id: get_id(),
+      id: value && value.id || get_id(),
       time: value && value.time || new Date().getTime(),
       key: key,
       value: value,
