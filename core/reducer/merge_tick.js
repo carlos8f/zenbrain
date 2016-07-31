@@ -21,21 +21,21 @@ module.exports = function container (get, set, clear) {
     }
     var tick = t.tick, thoughts = t.thoughts, size = t.size
     // reduce thoughts to tick
-    thoughts = thoughts.filter(function (thought) {
-      return tick.thought_ids.indexOf(thought.id) === -1
-    })
-    if (!thoughts.length) {
-      //console.error('no new thoughts', t.tick.id)
-      return cb()
-    }
-    //console.error('reducing', t.tick.id)
+    var new_thoughts = 0
     thoughts.forEach(function (thought) {
+      if (tick.thought_ids.indexOf(thought.id) !== -1) {
+        return
+      }
+      new_thoughts++
       tick.thought_ids.push(thought.id)
       tick.num_thoughts++
       tick.min_time = tick.min_time ? Math.min(tick.min_time, thought.time) : thought.time
       tick.max_time = tick.max_time ? Math.max(tick.max_time, thought.time) : thought.time
     })
-    t.thoughts = thoughts
+    if (!new_thoughts) {
+      //console.error('no new thoughts', t.tick.id)
+      return cb()
+    }
     // apply reducers to this tick
     //get('logger').info('after thought filter', new Date().getTime() - before, 'ms')
     before = new Date().getTime()
