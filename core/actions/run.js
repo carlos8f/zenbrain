@@ -4,6 +4,7 @@ module.exports = function container (get, set, clear) {
   var c = get('config')
   var series = get('motley:vendor.run-series')
   var mark_complete = get('utils.mark_complete')
+  var get_timestamp = get('utils.get_timestamp')
   return function run () {
     var rs = get('run_state')
     var runner = get('runner')
@@ -14,7 +15,7 @@ module.exports = function container (get, set, clear) {
       if (rs.tick === rs.last_tick) {
         return setTimeout(getNext, c.brain_speed_ms / 2)
       }
-      get('logger').info('run', 'tick'.grey, rs.tick.grey)
+      //get('logger').info('run', 'tick'.grey, rs.tick.grey)
       rs.last_tick = rs.tick
       var params = {
         query: {
@@ -29,10 +30,11 @@ module.exports = function container (get, set, clear) {
           time: 1
         }
       }
+      //console.error('params', get_timestamp(max_time), params, {feed: 'runner'})
       get('ticks').select(params, function (err, ticks) {
         if (err) throw err
         if (ticks.length) {
-          get('logger').info('run', 'processing'.grey, ticks.length, 'ticks'.grey)
+          //get('logger').info('run', 'processing'.grey, ticks.length, 'ticks'.grey)
           currently_idle = false
           var tasks = ticks.map(function (tick) {
             max_time = Math.max(tick.time, max_time)
