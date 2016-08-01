@@ -8,7 +8,8 @@ module.exports = function container (get, set, clear) {
       // init tick
       var bucket = tb(t.thoughts[0].time).resize(t.size)
       t.tick = {
-        id: get('app_name') + '_' + bucket.toString(),
+        id: get('app_name') + ':' + bucket.toString(),
+        app_name: get('app_name'),
         time: bucket.toMilliseconds(),
         size: t.size,
         complete: false,

@@ -10,13 +10,11 @@ module.exports = function container (get, set, clear) {
     var ticks = {}
     var tasks = []
     thoughts.forEach(function (thought) {
-      c.tick_sizes.forEach(function (size) {
-        var tickId = tb(thought.time)
-          .resize(size)
-          .toString()
-        ticks[tickId] || (ticks[tickId] = {thoughts: [], size: size})
-        ticks[tickId].thoughts.push(thought)
-      })
+      var tickId = tb(thought.time)
+        .resize(c.brain_speed)
+        .toString()
+      ticks[tickId] || (ticks[tickId] = {thoughts: [], size: c.brain_speed})
+      ticks[tickId].thoughts.push(thought)
     })
     Object.keys(ticks).forEach(function (tickId) {
       var t = ticks[tickId]
@@ -60,6 +58,7 @@ module.exports = function container (get, set, clear) {
       },
       function (err, result) {
         if (err) return cb(err)
+        //console.error('process thoughts result', result.result)
         //get('logger').info('after saves', new Date().getTime() - before, 'ms', result, thoughts.length, 'thoughts', {feed: 'reducer'})
         cb()
       })

@@ -67,10 +67,10 @@ module.exports = function zenbrain (p, app_name) {
       app.set('zenbrain:command', command || null)
       var cmds = app.get('zenbrain:commands').map(function (command) {
         var cmd = program
-          .command(command.spec)
+          .command(command.spec || command.name)
           .description(command.description)
         ;(command.options || []).forEach(function (option) {
-          cmd = cmd.option(option.spec, option.description, option.number ? Number : String, option.default)
+          cmd = cmd.option(option.spec || ('--' + option.name), option.description, option.number ? Number : String, option.default)
         })
         var action = app.get('zenbrain:actions.' + (command.action || command.name))
         cmd.action(launcher(action))

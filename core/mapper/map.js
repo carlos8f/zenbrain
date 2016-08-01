@@ -1,16 +1,11 @@
 module.exports = function container (get, set, clear) {
   var get_id = get('utils.get_id')
   return function map (key, value, cb) {
-    if (Object.prototype.toString.call(key) === '[object Object]') {
-      value = key
-      cb = value
-      key = null
-    }
     var thought = {
-      id: value && value.id || get_id(),
-      time: value && value.time || new Date().getTime(),
+      id: key + ':' + (value.id || get_id()),
       key: key,
       value: value,
+      time: value.time || new Date().getTime(),
       processed: false
     }
     get('thoughts').save(thought, function (err, saved) {

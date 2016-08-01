@@ -1,5 +1,10 @@
 {
   "name": "map",
-  "spec": "map",
-  "description": "map"
+  "description": "map",
+  "options": [
+    {
+      "name": "backfill",
+      "description": "backfill historical trades for use in simulation"
+    }
+  ]
 }

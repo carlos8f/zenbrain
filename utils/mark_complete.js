@@ -1,31 +1,71 @@
 var tb = require('timebucket')
+var parallel = require('run-parallel-limit')
 
 module.exports = function container (get, set, clear) {
+  var c = get('config')
+  var get_timestamp = get('utils.get_timestamp')
   return function (time, size, cb) {
     if (!time) time = tb(size).toMilliseconds()
-    get('db').collection('ticks').update(
-      {
+    var num_completed = 0, ids = []
+    get('ticks').select(
+    {
+      query: {
         app_name: get('app_name'),
         time: {
-          $lt: time
+          $lte: time,
         },
         complete: false,
         size: size
       },
-      {
-        $set: {
-          complete: true
+      limit: c.mark_complete_limit
+    }, function (err, results) {
+      if (err) return cb(err)
+      var tasks = results.map(function (tick) {
+        return function (done) {
+          var bucket = tb(tick.time).resize(tick.size)
+          var next_bucket = tb(bucket.toString()).add(1)
+          get('db').collection('thoughts').count({
+            app_name: get('app_name'),
+            processed: false,
+            time: {
+              $lt: next_bucket.toMilliseconds(),
+              $gte: bucket.toMilliseconds()
+            }
+          }, function (err, num_unprocessed) {
+            if (err) return cb(err)
+            if (!num_unprocessed) {
+              num_completed++
+              get('logger').info('mark_complete', 'completed'.grey, tick.id.cyan, get_timestamp(tick.time))
+              ids.push(tick.id)
+            }
+            else {
+              get('logger').info('mark_complete', 'still processing'.grey, tick.id, num_unprocessed)
+            }
+            done()
+          })
         }
-      },
-      {
-        multi: true
-      },
-      function (err, result) {
+      })
+      parallel(tasks, c.parallel_limit, function (err) {
         if (err) return cb(err)
-        if (result.nModified) {
-          get('logger').info('mark_complete', 'completed', result.nModified, size, 'ticks.')
+        if (num_completed) {
+          get('db').collection('ticks').update({
+            _id: {
+              $in: [ids]
+            }
+          }, {
+            $set: {
+              complete: true
+            }
+          }, {
+            multi: true
+          }, function (err, result) {
+            if (err) return cb(err)
+            console.error('mark_complete', result.result)
+          })
+          get('logger').info('mark_complete', 'completed', num_completed, 'ticks.')
         }
         cb()
       })
+    })
   }
 }
