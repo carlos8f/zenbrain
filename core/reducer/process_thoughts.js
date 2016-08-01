@@ -21,7 +21,7 @@ module.exports = function container (get, set, clear) {
       // for each bucket, load existing tick
       tasks.push(function (done) {
         var before = new Date().getTime()
-        get('ticks').load(get('app_name') + '_' + tickId, function (err, tick) {
+        get('ticks').load(get('app_name') + ':' + tickId, function (err, tick) {
           if (err) return done(err)
           t.tick = tick
           //get('logger').info('after tick load', new Date().getTime() - before, 'ms')

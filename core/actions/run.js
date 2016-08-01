@@ -56,7 +56,7 @@ module.exports = function container (get, set, clear) {
               //get('logger').info('run', 'idle'.grey)
               currently_idle = true
             }
-            setTimeout(getNext, c.brain_speed_ms / 4)
+            setTimeout(getNext, c.brain_speed_ms)
           }
         })
       })

@@ -5,16 +5,17 @@ module.exports = function container (get, set, clear) {
   var c = get('config')
   var get_timestamp = get('utils.get_timestamp')
   return function (time, size, cb) {
-    if (!time) time = tb(size).toMilliseconds()
     var num_completed = 0, ids = []
+    var to_time = tb().resize(size).subtract(2).toMilliseconds()
     get('ticks').select(
     {
       query: {
         app_name: get('app_name'),
+        complete: false,
         time: {
           $gt: time,
+          $lt: to_time
         },
-        complete: false,
         size: size
       },
       limit: c.mark_complete_limit

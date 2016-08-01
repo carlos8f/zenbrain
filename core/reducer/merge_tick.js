@@ -42,6 +42,9 @@ module.exports = function container (get, set, clear) {
     apply_funcs(t, get('reducers'), function (err) {
       //get('logger').info('after reducers', new Date().getTime() - before, 'ms')
       if (err) return cb(err)
+      if (tick.complete) {
+        get('logger').info('reducer', 'warning'.red, 'save after complete'.grey, tick.id)
+      }
       get('ticks').save(tick, function (err) {
         if (err) return cb(err)
         //get('logger').info('after save', new Date().getTime() - before, 'ms')
