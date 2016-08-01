@@ -38,10 +38,10 @@ module.exports = function container (get, set, clear) {
           }, function (err, num_unprocessed) {
             if (err) return cb(err)
             if (!num_unprocessed) {
-              tick.complete = true
+              ids.push(tick.id)
               num_completed++
               //get('logger').info('mark_complete', 'completed'.grey, tick.id.cyan, get_timestamp(tick.time))
-              get('ticks').save(tick, done)
+              done()
             }
             else {
               //get('logger').info('mark_complete', 'still processing'.grey, tick.id, num_unprocessed)
@@ -53,9 +53,26 @@ module.exports = function container (get, set, clear) {
       parallel(tasks, c.parallel_limit, function (err) {
         if (err) return cb(err)
         if (num_completed) {
-          //get('logger').info('mark_complete', 'completed', num_completed, 'ticks.')
+          get('db').collection('ticks').update({
+            _id: {$in: ids}
+          },
+          {
+            $set: {
+              complete: true
+            }
+          }, {
+            multi: true
+          },
+          function (err, result) {
+            if (err) return cb(err)
+            //console.error('mark complete result', result.result)
+            //get('logger').info('mark_complete', 'completed', num_completed, 'ticks.')
+            cb()
+          })
         }
-        cb()
+        else {
+          cb()
+        }
       })
     })
   }

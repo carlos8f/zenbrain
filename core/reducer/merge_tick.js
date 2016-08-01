@@ -13,7 +13,6 @@ module.exports = function container (get, set, clear) {
         time: bucket.toMilliseconds(),
         size: t.size,
         complete: false,
-        seen: false,
         num_thoughts: 0,
         thought_ids: [],
         min_time: null,

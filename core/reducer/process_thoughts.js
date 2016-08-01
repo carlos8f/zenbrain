@@ -45,9 +45,7 @@ module.exports = function container (get, set, clear) {
         return thought.id
       })
       get('db').collection('thoughts').update({
-        _id: {$in: ids},
-        processed: false,
-        app_name: get('app_name')
+        _id: {$in: ids}
       },
       {
         $set: {
