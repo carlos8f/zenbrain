@@ -53,7 +53,7 @@ module.exports = function container (get, set, clear) {
           mark_complete(max_time, c.brain_speed, function (err) {
             if (err) throw err
             if (!currently_idle) {
-              get('logger').info('run', 'idle'.grey)
+              //get('logger').info('run', 'idle'.grey)
               currently_idle = true
             }
             setTimeout(getNext, c.brain_speed_ms / 2)
