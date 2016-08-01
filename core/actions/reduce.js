@@ -11,7 +11,7 @@ module.exports = function container (get, set, clear) {
       }
       if (idle && !currently_idle) {
         currently_idle = true
-        //get('logger').info('reduce', 'idle'.grey)
+        get('logger').info('reduce', 'idle'.grey)
       }
       else if (!idle) {
         currently_idle = false
