@@ -14,10 +14,7 @@ module.exports = function container (get, set, clear) {
         size: t.size,
         processed: false,
         complete: false,
-        num_thoughts: 0,
         thought_ids: [],
-        min_time: null,
-        max_time: null
       }
     }
     var tick = t.tick, thoughts = t.thoughts, size = t.size
@@ -29,9 +26,6 @@ module.exports = function container (get, set, clear) {
       }
       new_thoughts++
       tick.thought_ids.push(thought.id)
-      tick.num_thoughts++
-      tick.min_time = tick.min_time ? Math.min(tick.min_time, thought.time) : thought.time
-      tick.max_time = tick.max_time ? Math.max(tick.max_time, thought.time) : thought.time
     })
     if (!new_thoughts) {
       //console.error('no new thoughts', t.tick.id)
