@@ -3,32 +3,34 @@ var parallel = require('run-parallel-limit')
 
 module.exports = function container (get, set, clear) {
   var c = get('config')
-  var merge_thoughts = get('merge_thoughts')
+  var merge_ticks = get('merge_ticks')
   var get_timestamp = get('utils.get_timestamp')
-  return function process_thoughts (thoughts, cb) {
+  return function process_ticks (ticks, cb) {
     // break thoughts into timebuckets at each size
-    var ticks = {}
+    var buckets = {}
     var tasks = []
-    thoughts.forEach(function (thought) {
-      var tickId = tb(thought.time)
-        .resize(c.brain_speed)
-        .toString()
-      ticks[tickId] || (ticks[tickId] = {thoughts: [], size: c.brain_speed})
-      ticks[tickId].thoughts.push(thought)
+    ticks.forEach(function (tick) {
+      c.reducer_sizes.forEach(function (size) {
+        var bucketId = tb(tick.time)
+          .resize(size)
+          .toString()
+        buckets[bucketId] || (buckets[bucketId] = {ticks: [], size: size})
+        buckets[bucketId].ticks.push(tick)
+      })
     })
-    Object.keys(ticks).forEach(function (tickId) {
-      var t = ticks[tickId]
+    Object.keys(buckets).forEach(function (bucketId) {
+      var b = buckets[bucketId]
       // for each bucket, load existing tick
       tasks.push(function (done) {
         var before = new Date().getTime()
-        get('ticks').load(get('app_name') + ':' + tickId, function (err, tick) {
+        get('ticks').load(get('app_name') + ':' + bucketId, function (err, tick) {
           if (err) return done(err)
-          t.tick = tick
+          b.tick = tick
           //get('logger').info('after tick load', new Date().getTime() - before, 'ms')
           // upsert this tick
           //console.error('merge tick', tick.id)
           //var before = new Date().getTime()
-          merge_thoughts(t, function (err) {
+          merge_ticks(b, function (err) {
             if (err) return done(err)
             //get('logger').info('after merge_tick', new Date().getTime() - before, 'ms')
             done()
@@ -41,10 +43,10 @@ module.exports = function container (get, set, clear) {
       //get('logger').info('process thoughts', new Date().getTime() - before, 'ms', 'for', tasks.length, 'tasks')
       if (err) return cb(err)
       // set processed flag for each thought
-      var ids = thoughts.map(function (thought) {
-        return thought.id
+      var ids = ticks.map(function (tick) {
+        return tick.id
       })
-      get('db').collection('thoughts').update({
+      get('db').collection('ticks').update({
         _id: {$in: ids}
       },
       {

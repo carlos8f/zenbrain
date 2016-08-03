@@ -30,5 +30,5 @@ module.exports = {
       password: config.mongo_password
     }
   },
-  'hooks.mount[]': require('./on_mount')
+  'hooks.mount[]': require('./indexes')
 }

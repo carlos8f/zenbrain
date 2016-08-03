@@ -2,7 +2,7 @@ var tb = require('timebucket')
 
 module.exports = function container (get, set, clear) {
   var apply_funcs = get('utils.apply_funcs')
-  return function merge_tick (t, cb) {
+  return function merge_thoughts (t, cb) {
     var before = new Date().getTime()
     if (!t.tick) {
       // init tick
@@ -12,6 +12,7 @@ module.exports = function container (get, set, clear) {
         app_name: get('app_name'),
         time: bucket.toMilliseconds(),
         size: t.size,
+        processed: false,
         complete: false,
         num_thoughts: 0,
         thought_ids: [],
@@ -39,7 +40,7 @@ module.exports = function container (get, set, clear) {
     // apply reducers to this tick
     //get('logger').info('after thought filter', new Date().getTime() - before, 'ms')
     before = new Date().getTime()
-    apply_funcs(t, get('reducers'), function (err) {
+    apply_funcs(t, get('thought_reducers'), function (err) {
       //get('logger').info('after reducers', new Date().getTime() - before, 'ms')
       if (err) return cb(err)
       if (tick.complete) {

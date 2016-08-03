@@ -1,24 +1,19 @@
 var colors = require('colors')
 
 module.exports = function container (get, set, clear) {
-  var reducer = get('reducer')
   var c = get('config')
-  var currently_idle = false
   return function reduce () {
-    reducer(function (err, idle) {
-      if (err) {
-        get('logger').error('reduce err', err, {feed: 'errors'})
-      }
-      if (idle && !currently_idle) {
-        currently_idle = true
-        //get('logger').info('reduce', 'idle'.grey)
-      }
-      else if (!idle) {
-        currently_idle = false
-      }
-      setTimeout(function () {
-        reduce()
-      }, idle ? c.reduce_timeout : 0)
+    get('reducers').forEach(function (reducer) {
+      ;(function reduce () {
+        reducer(function (err, idle) {
+          if (err) {
+            get('logger').error('reduce err', err, {feed: 'errors'})
+          }
+          setTimeout(function () {
+            reduce()
+          }, idle ? c.reduce_timeout : 0)
+        })
+      })()
     })
   }
 }
