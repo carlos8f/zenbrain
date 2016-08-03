@@ -1,5 +1,11 @@
 {
   "name": "launch",
   "spec": "launch [cmds...]",
-  "description": "launch multiple commands"
+  "description": "launch multiple commands",
+  "options": [
+    {
+      "name": "backfill",
+      "description": "backfill historical trades for use in simulation"
+    }
+  ]
 }

@@ -21,7 +21,10 @@ module.exports = function container (get, set, clear) {
       var sub_args = [cmd]
       ;(command.options || []).forEach(function (option) {
         if (typeof options[option.name] !== 'undefined') {
-          sub_args.push('--' + option.name, options[option.name])
+          sub_args.push('--' + option.name)
+          if (options[option.name] !== 'undefined') {
+            sub_args.push(options[option.name])
+          }
         }
       })
       ;(function respawn () {
