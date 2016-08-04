@@ -31,17 +31,17 @@ module.exports = function container (get, set, clear) {
       return cb()
     }
     // apply reducers to this tick
-    get('logger').info('merge thoughts after thought filter', new Date().getTime() - before, 'ms')
+    //get('logger').info('merge thoughts after thought filter', new Date().getTime() - before, 'ms')
     before = new Date().getTime()
     apply_funcs(t, get('thought_reducers'), function (err) {
-      get('logger').info('merge thoughts after reducers', new Date().getTime() - before, 'ms')
+      //get('logger').info('merge thoughts after reducers', new Date().getTime() - before, 'ms')
       if (err) return cb(err)
       if (tick.status === 'complete') {
         get('logger').info('merge thoughts reducer', 'warning'.red, 'save after complete'.grey, tick.id)
       }
       get('ticks').save(tick, function (err) {
         if (err) return cb(err)
-        get('logger').info('merge thoughts after save', new Date().getTime() - before, 'ms')
+        //get('logger').info('merge thoughts after save', new Date().getTime() - before, 'ms')
         cb()
       })
     })

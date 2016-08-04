@@ -38,7 +38,7 @@ module.exports = function container (get, set, clear) {
     })
     var before = new Date().getTime()
     parallel(tasks, c.parallel_limit, function (err) {
-      get('logger').info('process thoughts', new Date().getTime() - before, 'ms', 'for', tasks.length, 'tasks')
+      //get('logger').info('process thoughts', new Date().getTime() - before, 'ms', 'for', tasks.length, 'tasks')
       if (err) return cb(err)
       // set processed flag for each thought
       var ids = thoughts.map(function (thought) {
@@ -56,8 +56,8 @@ module.exports = function container (get, set, clear) {
       },
       function (err, result) {
         if (err) return cb(err)
-        console.error('process thoughts result', result.result)
-        get('logger').info('after saves', new Date().getTime() - before, 'ms', result, thoughts.length, 'thoughts', {feed: 'reducer'})
+        //console.error('process thoughts result', result.result)
+        //get('logger').info('after saves', new Date().getTime() - before, 'ms', result, thoughts.length, 'thoughts', {feed: 'reducer'})
         cb()
       })
     })

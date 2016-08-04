@@ -16,14 +16,14 @@ module.exports = function container (get, set, clear) {
       }
     }
     var tick = b.tick, ticks = b.ticks, size = b.size
-    get('logger').info('merge ticks after thought filter', new Date().getTime() - before, 'ms')
+    //get('logger').info('merge ticks after thought filter', new Date().getTime() - before, 'ms')
     before = new Date().getTime()
     apply_funcs(b, get('tick_reducers'), function (err) {
-      get('logger').info('merge ticks after reducers', new Date().getTime() - before, 'ms')
+      //get('logger').info('merge ticks after reducers', new Date().getTime() - before, 'ms')
       if (err) return cb(err)
       get('ticks').save(tick, function (err) {
         if (err) return cb(err)
-        get('logger').info('merge ticks after save', new Date().getTime() - before, 'ms')
+        //get('logger').info('merge ticks after save', new Date().getTime() - before, 'ms')
         cb()
       })
     })

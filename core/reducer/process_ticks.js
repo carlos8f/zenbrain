@@ -26,13 +26,13 @@ module.exports = function container (get, set, clear) {
         get('ticks').load(get('app_name') + ':' + bucketId, function (err, tick) {
           if (err) return done(err)
           b.tick = tick
-          get('logger').info('after tick load', new Date().getTime() - before, 'ms')
+          //get('logger').info('after tick load', new Date().getTime() - before, 'ms')
           // upsert this tick
           console.error('merge bucket', bucketId)
           var before = new Date().getTime()
           merge_ticks(b, function (err) {
             if (err) return done(err)
-            get('logger').info('after merge_tick', new Date().getTime() - before, 'ms')
+            //get('logger').info('after merge_tick', new Date().getTime() - before, 'ms')
             done()
           })
         })
@@ -40,7 +40,7 @@ module.exports = function container (get, set, clear) {
     })
     var before = new Date().getTime()
     parallel(tasks, c.parallel_limit, function (err) {
-      get('logger').info('process thoughts', new Date().getTime() - before, 'ms', 'for', tasks.length, 'tasks')
+      //get('logger').info('process thoughts', new Date().getTime() - before, 'ms', 'for', tasks.length, 'tasks')
       if (err) return cb(err)
       // set processed flag for each thought
       var ids = ticks.map(function (tick) {
@@ -58,8 +58,8 @@ module.exports = function container (get, set, clear) {
       },
       function (err, result) {
         if (err) return cb(err)
-        console.error('process thoughts result', result.result)
-        get('logger').info('after saves', new Date().getTime() - before, 'ms', result, ids.length, 'thoughts', {feed: 'reducer'})
+        //console.error('process thoughts result', result.result)
+        //get('logger').info('after saves', new Date().getTime() - before, 'ms', result, ids.length, 'thoughts', {feed: 'reducer'})
         cb()
       })
     })
