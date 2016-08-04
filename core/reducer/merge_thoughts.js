@@ -27,21 +27,21 @@ module.exports = function container (get, set, clear) {
       tick.thought_ids.push(thought.id)
     })
     if (!new_thoughts) {
-      //console.error('no new thoughts', t.tick.id)
+      console.error('no new thoughts', t.tick.id)
       return cb()
     }
     // apply reducers to this tick
-    //get('logger').info('after thought filter', new Date().getTime() - before, 'ms')
+    get('logger').info('merge thoughts after thought filter', new Date().getTime() - before, 'ms')
     before = new Date().getTime()
     apply_funcs(t, get('thought_reducers'), function (err) {
-      //get('logger').info('after reducers', new Date().getTime() - before, 'ms')
+      get('logger').info('merge thoughts after reducers', new Date().getTime() - before, 'ms')
       if (err) return cb(err)
       if (tick.status === 'complete') {
-        get('logger').info('reducer', 'warning'.red, 'save after complete'.grey, tick.id)
+        get('logger').info('merge thoughts reducer', 'warning'.red, 'save after complete'.grey, tick.id)
       }
       get('ticks').save(tick, function (err) {
         if (err) return cb(err)
-        //get('logger').info('after save', new Date().getTime() - before, 'ms')
+        get('logger').info('merge thoughts after save', new Date().getTime() - before, 'ms')
         cb()
       })
     })

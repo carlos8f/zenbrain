@@ -3,7 +3,7 @@ module.exports = function container (get, set, clear) {
   var process_ticks = get('process_ticks')
   // process unprocessed thoughts
   return function reducer (cb) {
-    //var before = new Date().getTime()
+    var before = new Date().getTime()
     get('ticks').select({
       query: {
         app_name: get('app_name'),
@@ -15,12 +15,12 @@ module.exports = function container (get, set, clear) {
         time: 1
       }
     }, function (err, ticks) {
-      //get('logger').info('reducer query', new Date().getTime() - before, 'ms')
+      get('logger').info('reducer query', new Date().getTime() - before, 'ms')
       if (err) return cb(err)
       if (!ticks.length) {
         return cb(null, true)
       }
-      //get('logger').info('reducer', 'processing thoughts...'.grey, thoughts.length)
+      get('logger').info('reducer', 'processing ticks...'.grey, ticks.length)
       process_ticks(ticks, function (err, idle) {
         if (err) return cb(err)
         cb(null, false)
