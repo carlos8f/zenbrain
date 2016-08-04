@@ -22,7 +22,7 @@ module.exports = function container (get, set, clear) {
         var params = {
           query: {
             app_name: get('app_name'),
-            complete: true,
+            status: 'complete',
             size: c.brain_speed,
             time: {
               $gt: max_time

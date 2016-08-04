@@ -8,7 +8,7 @@ module.exports = function container (get, set, clear) {
       query: {
         app_name: get('app_name'),
         size: c.brain_speed,
-        processed: false
+        status: 'unprocessed'
       },
       limit: c.reducer_limit,
       sort: {

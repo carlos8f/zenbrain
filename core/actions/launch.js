@@ -3,8 +3,8 @@ var spawn = require('child_process').spawn
 
 module.exports = function container (get, set, clear) {
   return function launch () {
-    var args = [].slice.call(arguments)
-    var options = args.pop()
+    var args = get('args')
+    var options = get('options')
     args = args.filter(function (arg) {
       return !!arg
     })

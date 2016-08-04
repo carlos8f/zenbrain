@@ -11,7 +11,7 @@ module.exports = function container (get, set, clear) {
     {
       query: {
         app_name: get('app_name'),
-        complete: false,
+        status: 'processed',
         time: {
           $gt: time,
           $lt: to_time
@@ -31,7 +31,7 @@ module.exports = function container (get, set, clear) {
           }
           get('db').collection('thoughts').count({
             app_name: get('app_name'),
-            processed: false,
+            status: 'unprocessed',
             time: {
               $lt: next_bucket.toMilliseconds(),
               $gte: bucket.toMilliseconds()
@@ -59,7 +59,7 @@ module.exports = function container (get, set, clear) {
           },
           {
             $set: {
-              complete: true
+              status: 'complete'
             }
           }, {
             multi: true

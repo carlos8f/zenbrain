@@ -7,7 +7,7 @@ module.exports = function container (get, set, clear) {
     get('thoughts').select({
       query: {
         app_name: get('app_name'),
-        processed: false
+        status: 'unprocessed'
       },
       limit: c.reducer_limit,
       sort: {

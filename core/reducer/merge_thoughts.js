@@ -12,8 +12,7 @@ module.exports = function container (get, set, clear) {
         app_name: get('app_name'),
         time: bucket.toMilliseconds(),
         size: t.size,
-        processed: false,
-        complete: false,
+        status: 'unprocessed',
         thought_ids: [],
       }
     }
@@ -37,7 +36,7 @@ module.exports = function container (get, set, clear) {
     apply_funcs(t, get('thought_reducers'), function (err) {
       //get('logger').info('after reducers', new Date().getTime() - before, 'ms')
       if (err) return cb(err)
-      if (tick.complete) {
+      if (tick.status === 'complete') {
         get('logger').info('reducer', 'warning'.red, 'save after complete'.grey, tick.id)
       }
       get('ticks').save(tick, function (err) {

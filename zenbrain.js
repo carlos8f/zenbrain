@@ -80,24 +80,7 @@ module.exports = function zenbrain (p, app_name) {
         program.outputHelp()
         process.exit(1)
       }
-      app.mount(function (err) {
-        if (err) cb(err)
-        function onExit () {
-          app.closing = true
-          setTimeout(function () {
-            process.exit()
-          }, 5000)
-          process.on('uncaughtException', function (err) {
-            process.exit()
-          })
-          app.close(function (err) {
-            process.exit()
-          })
-        }
-        process.once('SIGINT', onExit)
-        process.once('SIGTERM', onExit)
-        program.parse(process.argv)
-      })
+      program.parse(process.argv)
     }
   }
 }

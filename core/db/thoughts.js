@@ -7,7 +7,7 @@ module.exports = function container (get, set) {
       if (!obj.time) {
         obj.time = new Date().getTime()
         obj.timestamp = get_timestamp(obj.time)
-        obj.processed = false
+        obj.status = 'unprocessed'
       }
       apply_funcs({op: 'save', type: 'thought', obj: obj}, get('zenbrain:db_hooks'), cb)
     }

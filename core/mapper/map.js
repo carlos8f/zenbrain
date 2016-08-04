@@ -6,7 +6,7 @@ module.exports = function container (get, set, clear) {
       key: key,
       value: value,
       time: value.time || new Date().getTime(),
-      processed: false
+      status: 'unprocessed'
     }
     get('thoughts').save(thought, function (err, saved) {
       if (err) {

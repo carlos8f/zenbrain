@@ -49,7 +49,7 @@ module.exports = function container (get, set, clear) {
       },
       {
         $set: {
-          processed: true
+          status: 'processed'
         }
       }, {
         multi: true
