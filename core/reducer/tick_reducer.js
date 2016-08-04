@@ -12,7 +12,7 @@ module.exports = function container (get, set, clear) {
       },
       limit: c.reducer_limit,
       sort: {
-        time: 1
+        time: -1
       }
     }, function (err, ticks) {
       get('logger').info('reducer query', new Date().getTime() - before, 'ms')
