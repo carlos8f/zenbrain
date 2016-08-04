@@ -24,13 +24,13 @@ module.exports = function container (get, set, clear) {
         get('ticks').load(get('app_name') + ':' + tickId, function (err, tick) {
           if (err) return done(err)
           t.tick = tick
-          get('logger').info('after tick load', new Date().getTime() - before, 'ms')
+          //get('logger').info('after tick load', new Date().getTime() - before, 'ms')
           // upsert this tick
-          console.error('merge tick', tickId)
+          //console.error('merge tick', tickId)
           var before = new Date().getTime()
           merge_thoughts(t, function (err) {
             if (err) return done(err)
-            get('logger').info('after merge_tick', new Date().getTime() - before, 'ms')
+            //get('logger').info('after merge_tick', new Date().getTime() - before, 'ms')
             done()
           })
         })
