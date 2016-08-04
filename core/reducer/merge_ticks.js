@@ -11,7 +11,8 @@ module.exports = function container (get, set, clear) {
         id: get('app_name') + ':' + bucket.toString(),
         app_name: get('app_name'),
         time: bucket.toMilliseconds(),
-        size: b.size
+        size: b.size,
+        status: 'processed'
       }
     }
     var tick = b.tick, ticks = b.ticks, size = b.size
