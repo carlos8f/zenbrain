@@ -28,7 +28,7 @@ module.exports = function container (get, set, clear) {
           b.tick = tick
           //get('logger').info('after tick load', new Date().getTime() - before, 'ms')
           // upsert this tick
-          console.error('merge bucket', bucketId)
+          //console.error('merge bucket', bucketId)
           var before = new Date().getTime()
           merge_ticks(b, function (err) {
             if (err) return done(err)
