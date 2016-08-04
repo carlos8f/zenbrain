@@ -12,13 +12,9 @@ module.exports = function container (get, set, clear) {
     var currently_idle = false
     ;(function getNext () {
       rs.tick = tb(c.brain_speed).toString()
-      if (rs.tick === rs.last_tick) {
-        //return setTimeout(getNext, c.brain_speed_ms / 4)
-      }
       mark_complete(max_time, c.brain_speed, function (err) {
         if (err) throw err
         //get('logger').info('run', 'tick'.grey, rs.tick.grey)
-        rs.last_tick = rs.tick
         var params = {
           query: {
             app_name: get('app_name'),
@@ -48,6 +44,9 @@ module.exports = function container (get, set, clear) {
               if (err) {
                 get('logger').error('run err', err)
               }
+              if (rs.tick !== rs.last_tick) {
+                rs.last_tick = rs.tick
+              }
               setImmediate(getNext)
             })
           }
@@ -55,6 +54,9 @@ module.exports = function container (get, set, clear) {
             if (!currently_idle) {
               //get('logger').info('run', 'idle'.grey)
               currently_idle = true
+            }
+            if (rs.tick !== rs.last_tick) {
+              rs.last_tick = rs.tick
             }
             setTimeout(getNext, c.brain_speed_ms)
           }
