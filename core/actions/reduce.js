@@ -8,6 +8,9 @@ module.exports = function container (get, set, clear) {
         reducer(function (err, idle) {
           if (err) {
             get('logger').error('reduce err', err, {feed: 'errors'})
+            if (err.name === 'MongoError') {
+              throw err
+            }
           }
           setTimeout(function () {
             reduce()
