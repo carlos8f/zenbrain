@@ -37,7 +37,7 @@ module.exports = function container (get, set, clear) {
       //get('logger').info('merge thoughts after reducers', new Date().getTime() - before, 'ms')
       if (err) return cb(err)
       if (tick.status === 'complete') {
-        get('logger').info('merge thoughts reducer', 'warning'.red, 'save after complete'.grey, tick.id)
+        //get('logger').info('merge thoughts reducer', 'warning'.red, 'save after complete'.grey, tick.id)
       }
       get('ticks').save(tick, function (err) {
         if (err) return cb(err)

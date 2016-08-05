@@ -16,3 +16,5 @@ config.save_state_interval = 10000 // save state
 config.parallel_limit = 8 // run this many concurrent tasks
 config.reduce_timeout = 1000
 config.mark_complete_limit = 1000
+config.run_limit = 100
+config.run_lookback = 86400000

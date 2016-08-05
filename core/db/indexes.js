@@ -8,6 +8,9 @@ module.exports = function container (get, set) {
       get('db.mongo.db').collection('ticks').ensureIndex({app_name: 1, time: -1, status: 1}, done)
     })
     tasks.push(function (done) {
+      get('db.mongo.db').collection('ticks').ensureIndex({app_name: 1, time: 1, status: 1}, done)
+    })
+    tasks.push(function (done) {
       get('db.mongo.db').collection('logs').ensureIndex({app_name: 1, time: -1, feed: 1}, done)
     })
     tasks.push(function (done) {

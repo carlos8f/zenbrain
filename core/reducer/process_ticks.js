@@ -51,7 +51,7 @@ module.exports = function container (get, set, clear) {
       },
       {
         $set: {
-          status: 'processed'
+          status: 'complete'
         }
       }, {
         multi: true

@@ -7,12 +7,13 @@ module.exports = function container (get, set, clear) {
     if (!b.tick) {
       // init tick
       var bucket = tb(b.ticks[0].time).resize(b.size)
+      var next_bucket = tb(bucket.toString()).add(1)
       b.tick = {
         id: get('app_name') + ':' + bucket.toString(),
         app_name: get('app_name'),
         time: bucket.toMilliseconds(),
         size: b.size,
-        status: 'processed'
+        status: 'complete'
       }
     }
     var tick = b.tick, ticks = b.ticks, size = b.size

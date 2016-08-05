@@ -5,6 +5,7 @@ module.exports = function container (get, set, clear) {
   var c = get('config')
   var get_timestamp = get('utils.get_timestamp')
   return function (time, size, cb) {
+    if (time < new Date().getTime()) return cb()
     var num_completed = 0, ids = []
     var to_time = tb().resize(size).subtract(2).toMilliseconds()
     get('ticks').select(
