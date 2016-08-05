@@ -27,7 +27,7 @@ module.exports = function container (get, set, clear) {
       tick.thought_ids.push(thought.id)
     })
     if (!new_thoughts) {
-      console.error('no new thoughts', t.tick.id)
+      //console.error('no new thoughts', t.tick.id)
       return cb()
     }
     // apply reducers to this tick
