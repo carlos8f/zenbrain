@@ -2,6 +2,7 @@ module.exports = function container (get, set, clear) {
   var c = get('config')
   var thoughts_to_buckets = get('thoughts_to_buckets')
   // process unprocessed thoughts
+  var thought_ids = []
   return function thought_reducer (cb) {
     //get('logger').info('thought_reducer')
     var before = new Date().getTime()
@@ -26,7 +27,13 @@ module.exports = function container (get, set, clear) {
       }
       //get('logger').info('reducer query', new Date().getTime() - before, 'ms')
       //get('logger').info('reducer', 'processing thoughts...'.grey, thoughts.length)
-      thoughts_to_buckets(thoughts)
+      thoughts.forEach(function (thought) {
+        if (thought_ids.indexOf(thought.id) !== -1) {
+          //console.error('reducer dupe', thought.id)
+          return
+        }
+        thought_ids.push(thought.id)
+      })
       get('db').collection('thoughts').remove({
         _id: {
           $in: thoughts.map(function (thought) { return thought.id })
@@ -34,6 +41,7 @@ module.exports = function container (get, set, clear) {
       }, function (err) {
         if (err) return cb(err)
         //get('logger').info('thought_reducer', 'done'.grey)
+        thoughts_to_buckets(thoughts)
         returned = true
         cb(null, false)
       })

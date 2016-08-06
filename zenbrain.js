@@ -1,6 +1,5 @@
 var motley = require('motley')
 var commander = require('commander')
-var make_config = require('./utils/make_config')
 var path = require('path')
 
 module.exports = function zenbrain (p, app_name) {

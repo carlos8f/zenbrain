@@ -20,6 +20,10 @@ module.exports = function container (get, set, clear) {
             size: size,
             data: {}
           }
+          //get('logger').info('tick to tick', 'create', tick.id)
+        }
+        else {
+          //get('logger').info('tick to tick', 'update', tick.id)
         }
         var g = {
           tick: tick,

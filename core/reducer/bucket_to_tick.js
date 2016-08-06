@@ -18,6 +18,10 @@ module.exports = function container (get, set, clear) {
           size: bucket.size,
           data: {}
         }
+        //get('logger').info('bucket to tick', 'create', tick.id)
+      }
+      else {
+        //get('logger').info('bucket to tick', 'update', tick.id)
       }
       var g = {
         bucket: bucket,

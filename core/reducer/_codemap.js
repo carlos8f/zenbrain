@@ -5,10 +5,8 @@ module.exports = {
   thought_reducer: require('./thought_reducer'),
   //process_ticks: require('./process_ticks'),
   thoughts_to_buckets: require('./thoughts_to_buckets'),
-  //tick_reducer: require('./tick_reducer'),
   'reducers[]': [
-    '#thought_reducer',
-    //'#tick_reducer'
+    '#thought_reducer'
   ],
   default_bucket_reducer: require('./default_bucket_reducer'),
   'bucket_reducers[]': '#default_bucket_reducer'
