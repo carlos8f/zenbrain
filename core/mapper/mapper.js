@@ -1,12 +1,12 @@
-var parallel = require('run-parallel-limit')
+var parallel = require('run-parallel')
 
 module.exports = function container (get, set, clear) {
   var c = get('config')
-  return function mapper (options) {
-    if (typeof options === 'string') {
-      throw new Error('unknown arg ' + options)
+  return function mapper () {
+    if (get('args').length) {
+      throw new Error('unknown arg')
     }
-    parallel(get('mappers'), c.parallel_limit, function (err) {
+    parallel(get('mappers'), function (err) {
       if (err) throw err
     })
   }

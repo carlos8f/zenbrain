@@ -2,7 +2,10 @@ var parallel = require('run-parallel-limit')
 
 module.exports = function container (get, set, clear) {
   var c = get('config')
-  return function status (options) {
+  return function status () {
+    if (get('args').length) {
+      throw new Error('unknown arg')
+    }
     var ret = {
       thoughts: 0,
       ticks: 0,

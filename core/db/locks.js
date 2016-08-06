@@ -1,3 +1,3 @@
 module.exports = function container (get, set) {
-  return get('db.createCollection')('run_states')
+  return get('db.createCollection')('locks')
 }

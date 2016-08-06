@@ -8,6 +8,9 @@ module.exports = function container (get, set, clear) {
   var get_timestamp = get('utils.get_timestamp')
   var ids_processed = []
   return function run () {
+    if (get('args').length) {
+      throw new Error('unknown arg')
+    }
     var rs = get('run_state')
     var runner = get('runner')
     ;[c.brain_speed].concat(c.reducer_sizes).forEach(function (size) {

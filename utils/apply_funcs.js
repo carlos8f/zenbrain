@@ -3,10 +3,13 @@ module.exports = function container (get, set, clear) {
     funcs = funcs.slice()
     ;(function doNext () {
       var curr = funcs.shift()
-      if (!curr) return cb()
-      curr(item, function (err) {
+      if (!curr) return cb(null, item)
+      curr(item, function (err, result) {
         if (err) return cb(err)
-        doNext()
+        if (typeof result !== 'undefined') {
+          item = result
+        }
+        setImmediate(doNext)
       })
     })()
   }

@@ -1,13 +1,15 @@
 module.exports = {
   _ns: 'zenbrain',
-  merge_thoughts: require('./merge_thoughts'),
-  merge_ticks: require('./merge_ticks'),
-  process_thoughts: require('./process_thoughts'),
-  process_ticks: require('./process_ticks'),
+  bucket_to_tick: require('./bucket_to_tick'),
+  tick_to_ticks: require('./tick_to_ticks'),
   thought_reducer: require('./thought_reducer'),
-  tick_reducer: require('./tick_reducer'),
+  //process_ticks: require('./process_ticks'),
+  thoughts_to_buckets: require('./thoughts_to_buckets'),
+  //tick_reducer: require('./tick_reducer'),
   'reducers[]': [
     '#thought_reducer',
-    '#tick_reducer'
-  ]
+    //'#tick_reducer'
+  ],
+  default_bucket_reducer: require('./default_bucket_reducer'),
+  'bucket_reducers[]': '#default_bucket_reducer'
 }
