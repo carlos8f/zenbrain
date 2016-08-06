@@ -5,11 +5,11 @@ module.exports = function container (get, set, clear) {
   var c = get('config')
   var app_name = get('app_name')
   var apply_funcs = get('utils.apply_funcs')
-  var bucket_to_tick = get('bucket_to_tick')
+  var tick_to_ticks = get('tick_to_ticks')
   var passive_update = get('utils.passive_update')
   var get_timestamp = get('utils.get_timestamp')
-  return function thoughts_to_buckets (thoughts) {
-    //get('logger').info('thoughts_to_buckets', thoughts.length, get_timestamp(thoughts[0].time))
+  return function thoughts_to_tick (thoughts) {
+    //get('logger').info('thoughts_to_tick', thoughts.length, get_timestamp(thoughts[0].time))
     var groups = {}
     thoughts.forEach(function (thought) {
       var bucket_id = tb(thought.time)
@@ -22,9 +22,9 @@ module.exports = function container (get, set, clear) {
       var g = groups[bucket_id]
       var new_thoughts = 0
       //get('logger').info('thoughts_to_buckets', bucket_id)
-      passive_update('buckets', app_name + ':' + bucket_id, function (bucket, done2) {
-        if (!bucket) {
-          bucket = {
+      passive_update('ticks', app_name + ':' + bucket_id, function (tick, done2) {
+        if (!tick) {
+          tick = {
             app: app_name,
             id: app_name + ':' + bucket_id,
             time: tb(bucket_id).toMilliseconds(),
@@ -37,24 +37,24 @@ module.exports = function container (get, set, clear) {
         else {
           //get('logger').info('thoughts_to_buckets', 'update', bucket.id)
         }
-        g.bucket = bucket
+        g.tick = tick
         g.thoughts.forEach(function (thought) {
-          if (bucket.thought_ids.indexOf(thought.id) !== -1) {
-            //console.error('dupe', thought.id, bucket.thought_ids.length)
+          if (tick.thought_ids.indexOf(thought.id) !== -1) {
+            //console.error('dupe', thought.id, tick.thought_ids.length)
             return
           }
           new_thoughts++
-          bucket.thought_ids.push(thought.id)
+          tick.thought_ids.push(thought.id)
         })
         //console.error('new', new_thoughts)
         if (!new_thoughts) {
-          return done2(null, g.bucket)
+          return done2(null, g.tick)
         }
         //console.error('new thoughts', new_thoughts)
-        bucket_to_tick(g.bucket)
-        apply_funcs(g, get('thought_reducers'), function (err) {
+        apply_funcs(g, get('thought_reducers'), function (err, g) {
           if (err) return done(err)
-          done2(null, g.bucket)
+          tick_to_ticks(g.tick)
+          done2(null, g.tick)
         })
       })
     })

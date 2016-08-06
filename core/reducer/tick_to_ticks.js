@@ -29,7 +29,7 @@ module.exports = function container (get, set, clear) {
           tick: tick,
           sub_ticks: [sub_tick]
         }
-        apply_funcs(g, get('tick_reducers'), function (err) {
+        apply_funcs(g, get('tick_reducers'), function (err, g) {
           if (err) return done2(err)
           //get('logger').info('tick_to_ticks', sub_tick.id, '->', tick.id)
           done2(null, g.tick)

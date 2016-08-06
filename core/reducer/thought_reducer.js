@@ -1,6 +1,6 @@
 module.exports = function container (get, set, clear) {
   var c = get('config')
-  var thoughts_to_buckets = get('thoughts_to_buckets')
+  var thoughts_to_tick = get('thoughts_to_tick')
   // process unprocessed thoughts
   var thought_ids = []
   return function thought_reducer (cb) {
@@ -41,7 +41,7 @@ module.exports = function container (get, set, clear) {
       }, function (err) {
         if (err) return cb(err)
         //get('logger').info('thought_reducer', 'done'.grey)
-        thoughts_to_buckets(thoughts)
+        thoughts_to_tick(thoughts)
         returned = true
         cb(null, false)
       })

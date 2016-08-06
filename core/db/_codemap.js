@@ -4,14 +4,12 @@ module.exports = {
     require('motley-mongo')
   ],
   'zenbrain:db': '#motley:db.mongo.db',
-  'db.buckets': require('./buckets'),
   'db.cache': require('./cache'),
   'db.locks': require('./locks'),
   'db.logs': require('./logs'),
   'db.run_states': require('./run_states'),
   'db.thoughts': require('./thoughts'),
   'db.ticks': require('./ticks'),
-  'zenbrain:buckets': '#motley:db.buckets',
   'zenbrain:cache': '#motley:db.cache',
   'zenbrain:locks': '#motley:db.locks',
   'zenbrain:logs': '#motley:db.logs',
@@ -19,7 +17,6 @@ module.exports = {
   'zenbrain:thoughts': '#motley:db.thoughts',
   'zenbrain:ticks': '#motley:db.ticks',
   'db.collections[]': [
-    '#db.buckets',
     '#db.cache',
     '#db.locks',
     '#db.logs',

@@ -1,5 +1,5 @@
 var assert = require('assert')
-  , parallel = require('run-parallel-limit')
+  , parallel = require('run-parallel')
 
 module.exports = function container (get, set, clear) {
   var c = get('config')
@@ -14,7 +14,7 @@ module.exports = function container (get, set, clear) {
     queued = true
     setTimeout(function () {
       var keys = Object.keys(items)
-      //get('logger').info('passive_update tasks', keys, outstanding)
+      //get('logger').info('passive_update tasks', keys.length, outstanding)
       if (!keys.length) {
         queued = false
         return
@@ -31,7 +31,7 @@ module.exports = function container (get, set, clear) {
           }, c.return_timeout)
           get(item.coll).load(item.id, function (err, obj) {
             if (err) throw err
-            //get('logger').info('passive_update', item.coll, item.id, 'updating'.green)
+            //get('logger').info('passive_update', item.coll, item.id, 'updating'.green, item.updaters.length)
             apply_funcs(obj, item.updaters, function (err, updated) {
               if (err) throw err
               assert(updated)
@@ -43,14 +43,14 @@ module.exports = function container (get, set, clear) {
                 })
                 returned = true
                 outstanding -= item.updaters.length
-                //get('logger').info('passive_update callbacks', item.callbacks.length)
+                //get('logger').info('passive_update updaters ran', saved.id, item.updaters.length)
                 done()
               })
             })
           })
         }
       })
-      parallel(tasks, c.parallel_limit, function (err) {
+      parallel(tasks, function (err) {
         if (err) throw err
         //console.error('passive_update complete', keys)
         queued = false
