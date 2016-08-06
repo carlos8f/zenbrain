@@ -4,7 +4,6 @@ var tb = require('timebucket')
 module.exports = function container (get, set, clear) {
   var c = get('config')
   var series = get('motley:vendor.run-series')
-  var mark_complete = get('utils.mark_complete')
   var get_timestamp = get('utils.get_timestamp')
   var ids_processed = []
   return function run () {
@@ -18,8 +17,7 @@ module.exports = function container (get, set, clear) {
       function findStart () {
         var params = {
           query: {
-            app_name: get('app_name'),
-            status: 'complete',
+            app: get('app_name'),
             size: size,
             time: {
               $gt: new Date().getTime() - c.run_lookback
@@ -49,8 +47,7 @@ module.exports = function container (get, set, clear) {
           //get('logger').info('run', 'tick'.grey, rs.tick.grey)
         var params = {
           query: {
-            app_name: get('app_name'),
-            status: 'complete',
+            app: get('app_name'),
             size: size,
             time: {
               $gt: max_time
