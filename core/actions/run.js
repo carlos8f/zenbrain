@@ -14,8 +14,7 @@ module.exports = function container (get, set, clear) {
     var runner = get('runner')
     ;[c.brain_speed].concat(c.reducer_sizes).forEach(function (size) {
       rs[size] || (rs[size] = {})
-      rs = rs[size]
-      if (rs.max_time) {
+      if (rs[size].max_time) {
         getnext()
       }
       else {
@@ -36,7 +35,7 @@ module.exports = function container (get, set, clear) {
           get('ticks').select(params, function (err, ticks) {
             if (err) throw err
             if (ticks.length) {
-              rs.max_time = ticks[0].time - 1
+              rs[size].max_time = ticks[0].time - 1
               getNext()
             }
             else {
@@ -56,7 +55,7 @@ module.exports = function container (get, set, clear) {
             app: get('app_name'),
             size: size,
             time: {
-              $gt: rs.max_time
+              $gt: rs[size].max_time
             }
           },
           sort: {
@@ -69,7 +68,7 @@ module.exports = function container (get, set, clear) {
           if (err) throw err
           if (ticks.length) {
             var tasks = ticks.map(function (tick) {
-              rs.max_time = Math.max(tick.time, rs.max_time)
+              rs[size].max_time = Math.max(tick.time, rs[size].max_time)
               return function task (done) {
                 if (ids_processed.indexOf(tick.id) !== -1) {
                   get('logger').error('run', 'warning: tick dupe', tick.id.grey)
