@@ -7,6 +7,5 @@ module.exports = {
   get_id: require('./get_id'),
   get_time: require('./get_time'),
   get_timestamp: require('./get_timestamp'),
-  mark_complete: require('./mark_complete'),
   passive_update: require('./passive_update')
 }
