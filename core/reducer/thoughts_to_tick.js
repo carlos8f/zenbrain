@@ -20,30 +20,34 @@ module.exports = function container (get, set, clear) {
     })
     Object.keys(groups).forEach(function (tick_id) {
       var g = groups[tick_id]
-      var new_thoughts = 0
       var defaults = {
         app: app_name,
         id: app_name + ':' + tick_id,
         time: tb(tick_id).toMilliseconds(),
         size: c.bucket_size,
-        prev_size: null,
         thought_ids: [],
+        queue: [],
         data: {}
       }
       function updater (tick, done) {
-        tick.queue || (tick.queue = [])
-        g.thoughts.forEach(function (thought) {
+        g.thoughts.forEach(function (thought, idx) {
           if (tick.thought_ids.indexOf(thought.id) !== -1) {
+            g.thoughts.splice(idx, 1)
             return
           }
-          tick.queue.push(thought)
-          new_thoughts++
         })
-        done(null, tick)
+        if (!g.thoughts.length) {
+          return
+        }
+        g.tick = tick
+        apply_funcs(g, get('thought_reducers'), function (err, g) {
+          if (err) return done(err)
+          done(null, g.tick)
+        })
       }
-      passive_update(tick_id, defaults, updater, function (err, tick) {
+      passive_update('ticks', tick_id, defaults, updater, function (err, tick) {
         if (err) throw err
-        if (new_thoughts) {
+        if (g.thoughts.length) {
           tick_to_ticks(tick)
         }
       })
