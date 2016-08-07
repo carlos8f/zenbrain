@@ -49,7 +49,7 @@ module.exports = function container (get, set, clear) {
       function getNext () {
         //mark_complete(max_time, size, function (err) {
         //  if (err) throw err
-          //get('logger').info('run', 'tick'.grey, rs.tick.grey)
+        //get('logger').info('run', 'tick'.grey, size.grey)
         var params = {
           query: {
             app: get('app_name'),
@@ -64,10 +64,11 @@ module.exports = function container (get, set, clear) {
           },
           limit: c.run_limit
         }
-        //console.error('params', get_timestamp(max_time), params, {feed: 'runner'})
+        //console.error('params', get_timestamp(rs[size].max_time), params, {feed: 'runner'})
         get('ticks').select(params, function (err, ticks) {
           if (err) throw err
           if (ticks.length) {
+            //console.error('processing', ticks.length, 'ticks')
             var tasks = ticks.map(function (tick) {
               rs[size].max_time = Math.max(tick.time, rs[size].max_time)
               return function task (done) {
@@ -86,6 +87,7 @@ module.exports = function container (get, set, clear) {
               if (err) {
                 get('logger').error('run err', err)
               }
+              //console.error('processed', ticks.length, 'ticks')
               setImmediate(getNext)
             })
           }
