@@ -12,7 +12,7 @@ module.exports = function container (get, set, clear) {
     }
     var rs = get('run_state')
     var runner = get('runner')
-    ;[c.brain_speed].concat(c.reducer_sizes).forEach(function (size) {
+    ;[c.bucket_size].concat(c.reducer_sizes).forEach(function (size) {
       rs[size] || (rs[size] = {})
       if (rs[size].max_time) {
         getNext()
@@ -55,7 +55,8 @@ module.exports = function container (get, set, clear) {
             app: get('app_name'),
             size: size,
             time: {
-              $gt: rs[size].max_time
+              $gt: rs[size].max_time, // search newer periods
+              $lt: tb().resize(size).toMilliseconds() // not current period
             }
           },
           sort: {

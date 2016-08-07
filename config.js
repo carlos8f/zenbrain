@@ -21,3 +21,4 @@ config.lock_backoff = 20
 config.lock_tries = 100
 config.passive_update_timeout = 30000
 config.return_timeout = 60000
+config.brain_speed_ms = 60000
