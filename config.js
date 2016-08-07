@@ -19,5 +19,5 @@ config.run_lookback = 86400000
 config.lock_timeout = 60000
 config.lock_backoff = 20
 config.lock_tries = 100
-config.passive_update_timeout = 5000
+config.passive_update_timeout = 30000
 config.return_timeout = 60000

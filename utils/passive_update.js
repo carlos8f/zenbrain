@@ -51,7 +51,7 @@ module.exports = function container (get, set, clear) {
               })
               returned = true
               outstanding -= item.count
-              //get('logger').info('passive_update', 'updaters ran'.grey, saved.id, item.count, new Date().getTime() - start, 'ms')
+              //get('logger').info('passive_update', saved.id.grey, 'x' + item.count, new Date().getTime() - start, 'ms')
               done()
             })
           })
