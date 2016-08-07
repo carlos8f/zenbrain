@@ -12,50 +12,40 @@ module.exports = function container (get, set, clear) {
     //get('logger').info('thoughts_to_tick', thoughts.length, get_timestamp(thoughts[0].time))
     var groups = {}
     thoughts.forEach(function (thought) {
-      var bucket_id = tb(thought.time)
+      var tick_id = tb(thought.time)
         .resize(c.bucket_size)
         .toString()
-      groups[bucket_id] || (groups[bucket_id] = {thoughts: []})
-      groups[bucket_id].thoughts.push(thought)
+      groups[tick_id] || (groups[tick_id] = {thoughts: []})
+      groups[tick_id].thoughts.push(thought)
     })
-    Object.keys(groups).forEach(function (bucket_id) {
-      var g = groups[bucket_id]
+    Object.keys(groups).forEach(function (tick_id) {
+      var g = groups[tick_id]
       var new_thoughts = 0
-      //get('logger').info('thoughts_to_buckets', bucket_id)
-      passive_update('ticks', app_name + ':' + bucket_id, function (tick, done2) {
-        if (!tick) {
-          tick = {
-            app: app_name,
-            id: app_name + ':' + bucket_id,
-            time: tb(bucket_id).toMilliseconds(),
-            size: c.bucket_size,
-            thought_ids: [],
-            data: {}
-          }
-          //get('logger').info('thoughts_to_buckets', 'create', bucket.id)
-        }
-        else {
-          //get('logger').info('thoughts_to_buckets', 'update', bucket.id)
-        }
-        g.tick = tick
+      var defaults = {
+        app: app_name,
+        id: app_name + ':' + tick_id,
+        time: tb(tick_id).toMilliseconds(),
+        size: c.bucket_size,
+        prev_size: null,
+        thought_ids: [],
+        data: {}
+      }
+      function updater (tick, done) {
+        tick.queue || (tick.queue = [])
         g.thoughts.forEach(function (thought) {
           if (tick.thought_ids.indexOf(thought.id) !== -1) {
-            //console.error('dupe', thought.id, tick.thought_ids.length)
             return
           }
+          tick.queue.push(thought)
           new_thoughts++
-          tick.thought_ids.push(thought.id)
         })
-        //console.error('new', new_thoughts)
-        if (!new_thoughts) {
-          return done2(null, g.tick)
+        done(null, tick)
+      }
+      passive_update(tick_id, defaults, updater, function (err, tick) {
+        if (err) throw err
+        if (new_thoughts) {
+          tick_to_ticks(tick)
         }
-        //console.error('new thoughts', new_thoughts)
-        apply_funcs(g, get('thought_reducers'), function (err, g) {
-          if (err) return done(err)
-          tick_to_ticks(g.tick)
-          done2(null, g.tick)
-        })
       })
     })
   }

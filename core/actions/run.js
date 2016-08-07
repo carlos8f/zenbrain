@@ -15,7 +15,7 @@ module.exports = function container (get, set, clear) {
     ;[c.brain_speed].concat(c.reducer_sizes).forEach(function (size) {
       rs[size] || (rs[size] = {})
       if (rs[size].max_time) {
-        getnext()
+        getNext()
       }
       else {
         function findStart () {
