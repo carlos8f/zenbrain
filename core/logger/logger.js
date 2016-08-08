@@ -1,11 +1,11 @@
 var crypto = require('crypto')
   , colors = require('colors')
-  , z = require('zero-fill')
 
 module.exports = function container (get, set) {
   var get_timestamp = get('utils.get_timestamp')
   var get_id = get('utils.get_id')
-  var max_slug_length = 0
+  var max_slug_length = 12
+  var z = get('utils.zero_fill')
   return {
     _log: function (args) {
       var options = {}
@@ -38,7 +38,7 @@ module.exports = function container (get, set) {
     info: function () {
       var args = [].slice.call(arguments)
       var slug = args.shift()
-      max_slug_length = Math.max(slug.length, max_slug_length)
+      max_slug_length = Math.max(colors.strip(slug).length, max_slug_length)
       var slug_colors = [
         'yellow',
         'blue',

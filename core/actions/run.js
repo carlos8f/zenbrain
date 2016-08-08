@@ -12,44 +12,11 @@ module.exports = function container (get, set, clear) {
     }
     var rs = get('run_state')
     var runner = get('runner')
+    var start = new Date().getTime()
     ;[c.bucket_size].concat(c.reducer_sizes).forEach(function (size) {
       rs[size] || (rs[size] = {})
-      if (rs[size].max_time) {
-        getNext()
-      }
-      else {
-        function findStart () {
-          var params = {
-            query: {
-              app: get('app_name'),
-              size: size,
-              time: {
-                $gt: new Date().getTime() - c.run_lookback
-              }
-            },
-            sort: {
-              time: 1
-            },
-            limit: 1
-          }
-          get('ticks').select(params, function (err, ticks) {
-            if (err) throw err
-            if (ticks.length) {
-              rs[size].max_time = ticks[0].time - 1
-              getNext()
-            }
-            else {
-              setTimeout(findStart, 1000)
-            }
-          })
-        }
-        findStart()
-      }
-
-      function getNext () {
-        //mark_complete(max_time, size, function (err) {
-        //  if (err) throw err
-        //get('logger').info('run', 'tick'.grey, size.grey)
+      rs[size].max_time || (rs[size].max_time = new Date().getTime())
+      ;(function getNext () {
         var params = {
           query: {
             app: get('app_name'),
@@ -64,11 +31,9 @@ module.exports = function container (get, set, clear) {
           },
           limit: c.run_limit
         }
-        //console.error('params', get_timestamp(rs[size].max_time), params, {feed: 'runner'})
         get('ticks').select(params, function (err, ticks) {
           if (err) throw err
           if (ticks.length) {
-            //console.error('processing', ticks.length, 'ticks')
             var tasks = ticks.map(function (tick) {
               rs[size].max_time = Math.max(tick.time, rs[size].max_time)
               return function task (done) {
@@ -87,7 +52,6 @@ module.exports = function container (get, set, clear) {
               if (err) {
                 get('logger').error('run err', err)
               }
-              //console.error('processed', ticks.length, 'ticks')
               setImmediate(getNext)
             })
           }
@@ -95,7 +59,7 @@ module.exports = function container (get, set, clear) {
             setTimeout(getNext, c.brain_speed_ms)
           }
         })
-      }
+      })()
     })
   }
 }
