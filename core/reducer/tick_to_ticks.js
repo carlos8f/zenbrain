@@ -8,7 +8,7 @@ module.exports = function container (get, set, clear) {
   var passive_update = get('utils.passive_update')
   return function tick_to_ticks (sub_tick) {
     //get('logger').info('tick_to_ticks', sub_tick.id)
-    c.reducer_sizes.forEach(function (size) {
+    c.reducer_sizes.slice(1).forEach(function (size) {
       var tick_bucket = tb(sub_tick.time).resize(size)
       var tick_id = app_name + ':' + tick_bucket.toString()
       var defaults = {

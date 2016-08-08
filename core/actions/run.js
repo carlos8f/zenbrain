@@ -13,7 +13,7 @@ module.exports = function container (get, set, clear) {
     var rs = get('run_state')
     var runner = get('runner')
     var start = new Date().getTime()
-    ;[c.bucket_size].concat(c.reducer_sizes).forEach(function (size) {
+    ;c.reducer_sizes.forEach(function (size) {
       rs[size] || (rs[size] = {})
       rs[size].max_time || (rs[size].max_time = new Date().getTime())
       ;(function getNext () {
