@@ -1,14 +1,15 @@
 var c = module.exports = {}
 c.mongo_url = "mongodb://localhost:27017/zenbrain"
-config.bucket_size = "1s"
-config.reducer_sizes = ["1m", "5m"]
+c.bucket_size = "1s"
+c.reducer_sizes = ["1m", "5m"]
+c.map_interval = 5000
 c.logic = function container (get, set, clear) {
   return [
-    function (tick, trigger, cb) {
+    function (tick, trigger, rs, cb) {
       // act only on second ticks
-      if (tick.size !== '1s' || !tick.data.messages) return cb()
+      if (tick.size !== '1s' || !tick.data.messages.length) return cb()
       trigger({
-        action: 'console_log',
+        type: 'console_log',
         text: tick.data.messages.join('\n')
       })
       cb()

@@ -61,6 +61,7 @@ module.exports = function zenbrain (p, app_name) {
       var launcher = app.get('zenbrain:launcher')
       var program = require('commander')
         .version(this.get_version())
+      program._name = app_name
       app.set('zenbrain:program', program)
       var command = process.argv[2]
       app.set('zenbrain:command', command || null)

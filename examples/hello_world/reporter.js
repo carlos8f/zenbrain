@@ -1,24 +1,10 @@
 var colors = require('colors')
-  , n = require('numbro')
-  , o = require('object-get')
 
 module.exports = function container (get, set, clear) {
-  var c = get('config')
-  var apply_funcs = get('utils.apply_funcs')
-  var reporter_cols = c.reporter_cols.map(function (i) {
-    return get('reporter_cols.' + i)
-  })
   return function reporter (tick, cb) {
-    if (!tick.data.trades) return cb()
-    var rs = get('run_state')
-    var g = {
-      tick: tick,
-      cols: []
-    }
-    apply_funcs(g, reporter_cols, function (err, g) {
-      if (err) return cb(err)
-      get('logger').info('reporter', g.cols.join(' '))
-      cb()
-    })
+    if (!tick.data.colors) return cb()
+    var ticker = tick.data.colors.map(function (color) { return color[color] }).join(', '.grey)
+    get('logger').info('reporter', 'colors used:'.grey, ticker)
+    cb()
   }
 }

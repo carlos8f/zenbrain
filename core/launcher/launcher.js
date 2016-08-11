@@ -17,6 +17,7 @@ module.exports = function container (get, set, clear) {
         if (err) cb(err)
         function onExit () {
           app.closing = true
+          console.error('exiting')
           setTimeout(function () {
             process.exit()
           }, 5000)

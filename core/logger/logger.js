@@ -1,11 +1,10 @@
-var crypto = require('crypto')
-  , colors = require('colors')
+var colors = require('colors')
 
 module.exports = function container (get, set) {
   var get_timestamp = get('utils.get_timestamp')
   var get_id = get('utils.get_id')
-  var max_slug_length = 12
   var z = get('utils.zero_fill')
+  var str_to_color = get('utils.str_to_color')
   return {
     _log: function (args) {
       var options = {}
@@ -38,20 +37,8 @@ module.exports = function container (get, set) {
     info: function () {
       var args = [].slice.call(arguments)
       var slug = args.shift()
-      max_slug_length = Math.max(colors.strip(slug).length, max_slug_length)
-      var slug_colors = [
-        'yellow',
-        'blue',
-        'magenta',
-        'cyan',
-        'white'
-      ]
-      var hash_val = crypto.createHash('sha1').update(slug).digest().readInt8() + 128
-      var color_idx = Math.floor((hash_val / 255) * slug_colors.length)
-      //console.error('color idx', hash_val, color_idx, slug_colors[color_idx])
-      if (typeof slug_colors[color_idx] === 'string') {
-        slug = ('[' + z(max_slug_length, slug, ' ') + ']')[slug_colors[color_idx]]
-      }
+      var color = str_to_color(slug)
+      slug = ('[' + z(12, slug, ' ') + ']')[color]
       args.unshift(slug)
       this._log(args)
     },

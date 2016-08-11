@@ -5,6 +5,7 @@ module.exports = function container (get, set, clear) {
     tick.data.messages || (tick.data.messages = [])
     // migrate the sub tick's messages to new tick
     tick.data.messages = tick.data.messages.concat(sub_tick.data.messages)
+    get('logger').info('reduce tick')
     cb(null, g)
   }
 }

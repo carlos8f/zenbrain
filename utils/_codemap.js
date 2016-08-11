@@ -9,5 +9,6 @@ module.exports = {
   get_time: require('./get_time'),
   get_timestamp: require('./get_timestamp'),
   passive_update: require('./passive_update'),
+  str_to_color: require('./str_to_color'),
   zero_fill: require('./zero_fill')
 }

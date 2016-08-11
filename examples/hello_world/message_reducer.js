@@ -11,6 +11,7 @@ module.exports = function container (get, set, clear) {
       // migrate message text to the data key
       tick.data.messages.push(thought.value.text)
     })
+    get('logger').info('reduce message')
     cb(null, g)
   }
 }
