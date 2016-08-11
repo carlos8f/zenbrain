@@ -21,3 +21,19 @@ config.lock_tries = 100
 config.passive_update_timeout = 60000
 config.return_timeout = 60000
 config.brain_speed_ms = 1000
+c.logic = function container (get, set, clear) {
+  // these callbacks will run in order on every tick.
+  // trigger an action with something like
+  /*
+  trigger({
+    action: 'foo',
+    some_prop: 'bar'
+  })
+  */
+  // and the action will be queued for execution.
+  return [
+    function (tick, trigger, cb) {
+      cb()
+    }
+  ]
+}

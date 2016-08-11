@@ -5,7 +5,6 @@ module.exports = function container (get, set, clear) {
   var c = get('config')
   var series = get('motley:vendor.run-series')
   var get_timestamp = get('utils.get_timestamp')
-  var ids_processed = []
   return function run () {
     if (get('args').length) {
       throw new Error('unknown arg')
@@ -37,13 +36,8 @@ module.exports = function container (get, set, clear) {
             var tasks = ticks.map(function (tick) {
               rs[size].max_time = Math.max(tick.time, rs[size].max_time)
               return function task (done) {
-                if (ids_processed.indexOf(tick.id) !== -1) {
-                  get('logger').error('run', 'warning: tick dupe', tick.id.grey)
-                  return setImmediate(done)
-                }
-                runner(tick, function (err) {
+                runner(tick, rs, function (err) {
                   if (err) return done(err)
-                  ids_processed.push(tick.id)
                   setImmediate(done)
                 })
               }

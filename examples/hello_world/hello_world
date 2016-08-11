@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+var zenbrain = require('../..')
+var brain = zenbrain(__dirname, 'hello_world')
+brain.cli()

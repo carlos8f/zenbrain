@@ -2,5 +2,8 @@ module.exports = {
   _ns: 'zenbrain',
   runner: require('./runner'),
   reporters: [],
-  tick_handlers: []
+  tick_handlers: [
+    
+  ],
+  queue: []
 }
