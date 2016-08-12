@@ -7,8 +7,11 @@ module.exports = function container (get, set, clear) {
   var get_timestamp = get('utils.get_timestamp')
   var get_id = get('utils.get_id')
   var get_duration = get('utils.get_duration')
-  set('@silent', true)
   return function sim () {
+    var options = get('options')
+    if (!options.verbose) {
+      set('@silent', true)
+    }
     if (get('args').length) {
       throw new Error('unknown arg')
     }

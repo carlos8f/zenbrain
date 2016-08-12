@@ -1,5 +1,12 @@
 {
   "name": "sim",
   "spec": "sim",
-  "description": "sim"
+  "description": "sim",
+  "options": [
+    {
+      "name": "verbose",
+      "spec": "-v, --verbose",
+      "description": "full console output of the simulation"
+    }
+  ]
 }
