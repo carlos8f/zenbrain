@@ -26,13 +26,13 @@ c.logic = function container (get, set, clear) {
   // trigger an action with something like
   /*
   trigger({
-    action: 'foo',
+    type: 'foo',
     some_prop: 'bar'
   })
   */
   // and the action will be queued for execution.
   return [
-    function (tick, trigger, cb) {
+    function (tick, trigger, rs, cb) {
       cb()
     }
   ]
