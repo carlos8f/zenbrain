@@ -3,5 +3,6 @@ module.exports = {
   'logger': require('./logger'),
   'motley:conf.console{}': {
     silent: true
-  }
+  },
+  silent: false
 }

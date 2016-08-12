@@ -15,6 +15,10 @@ module.exports = function container (get, set, clear) {
       // record the color selected to a new data key
       assert(color)
       map('color', color)
+      rs.unique_colors || (rs.unique_colors = [])
+      if (rs.unique_colors.indexOf(color) === -1) {
+        rs.unique_colors.push(color)
+      }
     }
     cb()
   }

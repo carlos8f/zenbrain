@@ -6,7 +6,7 @@ module.exports = {
     require('./map.json'),
     require('./reduce.json'),
     require('./run.json'),
-    //require('./sim.json'),
+    require('./sim.json'),
     //require('./status.json')
   ]
 }

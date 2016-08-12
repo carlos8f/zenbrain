@@ -1,1 +1,5 @@
-sim.json
+{
+  "name": "sim",
+  "spec": "sim",
+  "description": "sim"
+}

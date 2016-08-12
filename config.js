@@ -37,3 +37,5 @@ c.logic = function container (get, set, clear) {
     }
   ]
 }
+c.sim_limit = 100
+c.sim_days = 90

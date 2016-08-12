@@ -35,6 +35,7 @@ module.exports = function container (get, set) {
       catch (e) {}
     },
     info: function () {
+      if (get('silent')) return
       var args = [].slice.call(arguments)
       var slug = args.shift()
       var color = str_to_color(slug)
