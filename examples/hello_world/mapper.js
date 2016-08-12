@@ -1,5 +1,6 @@
 var markov = require('markov')
   , request = require('micro-request')
+  , colors = require('colors')
 
 module.exports = function container (get, set, clear) {
   var c = get('config')
@@ -7,7 +8,7 @@ module.exports = function container (get, set, clear) {
   return function mapper () {
     // map some random zen advice
     var m = markov()
-    var uri = 'https://gist.githubusercontent.com/carlos8f/59a6317ce0ede315d0df3811bb37533d/raw/gistfile1.txt'
+    var uri = c.seed_text_url
     get('logger').info('fetching', uri.grey)
     request(uri, function (err, resp, body) {
       if (err) throw err
@@ -18,11 +19,11 @@ module.exports = function container (get, set, clear) {
       m.seed(body, function () {
         get('logger').info('seeded')
         setInterval(function () {
-          var text = m.fill(m.pick(), Math.max(4, Math.round(Math.random() * 12))).join(' ')
+          var text = m.fill(m.pick(), Math.max(c.min_message_words, Math.round(Math.random() * c.max_message_words))).join(' ')
           map('message', {
             text: text
           })
-          get('logger').info('map')
+          get('logger').info('map', String(text.length).grey)
         }, c.map_interval)
       })
     })

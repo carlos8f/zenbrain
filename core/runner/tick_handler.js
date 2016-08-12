@@ -13,12 +13,12 @@ module.exports = function container (get, set, clear) {
       }
       rs.queue.push(action)
     }
-    apply_funcs(tick, trigger, c.logic, function (err) {
+    apply_funcs(tick, trigger, rs, c.logic.call(null, get, set, clear), function (err) {
       if (err) return cb(err)
       var tasks = rs.queue.map(function (action) {
         return function (done) {
           apply_funcs(tick, action, rs, get('action_handlers'), done)
-        })
+        }
       })
       apply_funcs(tasks, function (err)  {
         if (err) return cb(err)
