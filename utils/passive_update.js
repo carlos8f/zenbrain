@@ -7,20 +7,27 @@ module.exports = function container (get, set, clear) {
   var get_id = get('utils.get_id')
   var apply_funcs = get('utils.apply_funcs')
   var atomic_update = get('utils.atomic_update')
+  var get_tick_str = get('utils.get_tick_str')
   var app_name = get('app_name')
   var items = {}
   var outstanding = 0
   var queued = false
+  var timeout
+  var updating = false
   function queueNext () {
     if (queued) return
     queued = true
-    setTimeout(doNext, c.passive_update_timeout)
+    timeout = setTimeout(doNext, c.passive_update_timeout)
   }
   function doNext () {
+    if (updating) return
+    updating = true
+    clearTimeout(timeout)
     var keys = Object.keys(items)
-    //get('logger').info('passive_update tasks', outstanding)
+    //get('logger').info('batcher', outstanding, 'outstanding tick updates'.grey)
     if (!keys.length) {
       queued = false
+      updating = false
       return
     }
     var tasks = keys.map(function (item_id) {
@@ -30,7 +37,7 @@ module.exports = function container (get, set, clear) {
         var returned = false
         setTimeout(function () {
           if (!returned) {
-            console.error('passive update did not return', item.id)
+            //console.error('passive update did not return', item.id)
           }
         }, c.return_timeout)
         get(item.coll).load(item.id, function (err, obj) {
@@ -51,7 +58,7 @@ module.exports = function container (get, set, clear) {
               })
               returned = true
               outstanding -= item.count
-              //get('logger').info('passive_update', saved.id.grey, 'x' + item.count, new Date().getTime() - start, 'ms')
+              //get('logger').info('batcher', get_tick_str(saved.id), ('x' + item.count).grey, String(new Date().getTime() - start).grey, 'ms'.grey)
               done()
             })
           })
@@ -60,11 +67,8 @@ module.exports = function container (get, set, clear) {
     })
     parallel(tasks, function (err) {
       if (err) throw err
-      //console.error('passive_update complete', keys)
+      updating = false
       queued = false
-      if (outstanding) {
-        doNext()
-      }
     })
   }
   return function passive_update (coll, id, defaults, updater, cb) {

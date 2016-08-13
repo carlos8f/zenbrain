@@ -1,5 +1,6 @@
 var tb = require('timebucket')
   , assert = require('assert')
+  , colors = require('colors')
 
 module.exports = function container (get, set, clear) {
   var c = get('config')
@@ -12,6 +13,7 @@ module.exports = function container (get, set, clear) {
     var rs = get('run_state')
     var runner = get('runner')
     var start = new Date().getTime()
+    get('logger').info('runner', 'starting'.grey)
     ;c.reducer_sizes.forEach(function (size) {
       rs[size] || (rs[size] = {})
       rs[size].max_time || (rs[size].max_time = new Date().getTime())

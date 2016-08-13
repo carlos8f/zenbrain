@@ -37,5 +37,5 @@ c.logic = function container (get, set, clear) {
     }
   ]
 }
-c.sim_limit = 100
-c.sim_days = 90
+c.sim_input_unit = '1d'
+c.sim_input_limit = 1

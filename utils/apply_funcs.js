@@ -14,7 +14,7 @@ module.exports = function container (get, set, clear) {
         return_args.forEach(function (arg, idx) {
           apply_args[idx] = arg
         })
-        doNext()
+        setImmediate(doNext)
       }))
     })()
   }

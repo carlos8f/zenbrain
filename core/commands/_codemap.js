@@ -1,12 +1,15 @@
 module.exports = {
   _ns: 'zenbrain',
+  'commands.launch': require('./launch.json'),
+  'commands.map': require('./map.json'),
+  'commands.reduce': require('./reduce.json'),
+  'commands.run': require('./run.json'),
+  'commands.sim': require('./sim.json'),
   'commands[]': [
-    //require('./forget.json'),
-    require('./launch.json'),
-    require('./map.json'),
-    require('./reduce.json'),
-    require('./run.json'),
-    require('./sim.json'),
-    //require('./status.json')
+    '#commands.launch',
+    '#commands.map',
+    '#commands.reduce',
+    '#commands.run',
+    '#commands.sim'
   ]
 }

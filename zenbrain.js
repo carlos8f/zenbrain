@@ -74,6 +74,9 @@ module.exports = function zenbrain (p, app_name) {
         })
         var action = app.get('zenbrain:actions.' + (command.action || command.name))
         cmd.action(launcher(action))
+        if (command.name === 'launch') {
+          cmd.allowUnknownOption(true)
+        }
         return command.name
       })
       if (!command || cmds.indexOf(command) === -1) {
