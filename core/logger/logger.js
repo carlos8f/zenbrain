@@ -1,4 +1,5 @@
 var colors = require('colors')
+  , ansi_up = require('ansi_up')
 
 module.exports = function container (get, set) {
   var get_timestamp = get('utils.get_timestamp')
@@ -24,8 +25,8 @@ module.exports = function container (get, set) {
         id: get_id(),
         time: time,
         line: line,
-        data: options.data || null,
-        public: options.public || false
+        html: ansi_up.linkify(ansi_up.ansi_to_html(ansi_up.escape_for_html(line), {use_classes: true})),
+        data: options.data || null
       }
       try {
         get('logs').save(log, function (err, saved) {
