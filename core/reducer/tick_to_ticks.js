@@ -11,7 +11,9 @@ module.exports = function container (get, set, clear) {
   var per_sec = 0
   setInterval(function () {
     per_sec = n(counter).divide(30).format('0')
-    get('logger').info('reducer', 'processing  '.grey + per_sec + '/ticks sec'.grey)
+    if (per_sec !== '0') {
+      get('logger').info('reducer', 'processing  '.grey + per_sec + '/ticks sec'.grey)
+    }
     counter = 0
   }, 30000)
   return function tick_to_ticks (sub_tick) {
