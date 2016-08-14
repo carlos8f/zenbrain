@@ -13,7 +13,6 @@ module.exports = function container (get, set, clear) {
       if (get.exists('setup.' + get('command'))) {
         get('setup.' + get('command'))()
       }
-      get('logger').info('launcher', 'cmd `'.grey + get('command') + '` booting'.grey)
       app.mount(function (err) {
         if (err) cb(err)
         function onExit () {
@@ -32,6 +31,7 @@ module.exports = function container (get, set, clear) {
         process.once('SIGINT', onExit)
         process.once('SIGTERM', onExit)
         var run_state_id = get('app_name') + '_' + get('command')
+        get('logger').info('launcher', 'cmd `'.grey + get('command') + '` booting'.grey)
         get('run_states').load(run_state_id, function (err, run_state) {
           if (err) throw err
           run_state || (run_state = {
