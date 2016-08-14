@@ -13,11 +13,12 @@ module.exports = function container (get, set, clear) {
       if (get.exists('setup.' + get('command'))) {
         get('setup.' + get('command'))()
       }
+      get('logger').info('launcher', 'cmd `'.grey + get('command') + '` booting'.grey)
       app.mount(function (err) {
         if (err) cb(err)
         function onExit () {
           app.closing = true
-          console.error('exiting')
+          get('logger').info('launcher', 'cmd `'.grey + get('command') + '` exiting'.grey)
           setTimeout(function () {
             process.exit()
           }, 5000)
