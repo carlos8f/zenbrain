@@ -33,10 +33,15 @@ module.exports = function zenbrain (p, app_name) {
               map = require('./' + plugin + '/_codemap')
             }
             catch (e) {
-              if (e.code === 'MODULE_NOT_FOUND') {
-                throw new Error('plugin `' + plugin + '` could not be found.')
+              try {
+                map = require(plugin + '/_codemap')
               }
-              throw e
+              catch (e) {
+                if (e.code === 'MODULE_NOT_FOUND') {
+                  throw new Error('plugin `' + plugin + '` could not be found.')
+                }
+                throw e
+              }
             }
           }
           else {

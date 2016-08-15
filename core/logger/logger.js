@@ -21,6 +21,8 @@ module.exports = function container (get, set) {
         return arg
       }).join(' ')
       console.error(line)
+      // don't save log entries if it's a sim
+      if (get('command') === 'sim') return
       var log = {
         id: get_id(),
         app: get('app_name'),
