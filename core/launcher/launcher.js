@@ -14,7 +14,7 @@ module.exports = function container (get, set, clear) {
         get('setup.' + get('command'))()
       }
       app.mount(function (err) {
-        if (err) cb(err)
+        if (err) throw err
         function onExit () {
           app.closing = true
           get('logger').info('launcher', 'cmd `'.grey + get('command') + '` exiting'.grey)
