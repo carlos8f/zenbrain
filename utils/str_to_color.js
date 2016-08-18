@@ -9,9 +9,17 @@ module.exports = function str_to_color (str) {
     'cyan',
     'white'
   ]
-  var hash_val = crypto.createHash('sha1').update(str).digest().readInt8() + 128
-  var color_idx = Math.floor((hash_val / 256) * slug_colors.length)
-  assert(color_idx > -1)
-  assert(color_idx < slug_colors.length)
-  return slug_colors[color_idx]
+  var ret
+  try {
+    var hash_val = crypto.createHash('sha1').update(str).digest().readInt8() + 128
+    var color_idx = Math.floor((hash_val / 256) * slug_colors.length)
+    assert(color_idx > -1)
+    assert(color_idx < slug_colors.length)
+    ret = slug_colors[color_idx]
+    assert(typeof ret === 'string')
+  }
+  catch (e) {
+    return 'grey'
+  }
+  return ret
 }
