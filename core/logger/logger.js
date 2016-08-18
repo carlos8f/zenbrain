@@ -33,10 +33,12 @@ module.exports = function container (get, set) {
       }
       try {
         get('logs').save(log, function (err, saved) {
-          // nothing
+          if (err) console.error('log save err', err)
         })
       }
-      catch (e) {}
+      catch (e) {
+        console.error('log err', e)
+      }
     },
     info: function () {
       if (get('silent')) return
