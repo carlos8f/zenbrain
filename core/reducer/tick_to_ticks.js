@@ -12,7 +12,10 @@ module.exports = function container (get, set, clear) {
   setInterval(function () {
     per_sec = n(counter).divide(30).format('0')
     if (per_sec !== '0') {
-      get('logger').info('reducer', 'processing  '.grey + per_sec + '/ticks sec'.grey)
+      get('db').collection('thoughts').count({app: get('app_name')}, function (err, thought_count) {
+        if (err) throw err
+        get('logger').info('reducer', 'processing  '.grey + per_sec + '/ticks sec, thought queue: '.grey + thought_count, {feed: 'reducer'})
+      })
     }
     counter = 0
   }, 30000)
