@@ -15,7 +15,9 @@ module.exports = function container (get, set, clear) {
       }
     }, c.return_timeout)
     get('thoughts').select({
-      app: get('app_name'),
+      query: {
+        app: get('app_name')
+      },
       limit: c.reducer_limit,
       sort: {
         time: -1
