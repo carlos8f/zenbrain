@@ -23,15 +23,15 @@ module.exports = function container (get, set) {
       console.error(line)
       // don't save log entries if it's a sim
       if (get('command') === 'sim') return
-      var log = {
-        id: get_id(),
-        app: get('app_name'),
-        time: time,
-        line: line,
-        html: ansi_up.linkify(ansi_up.ansi_to_html(ansi_up.escape_for_html(line), {use_classes: true})).replace(/<\/span>"/g, '"'),
-        data: options.data || null
-      }
       try {
+        var log = {
+          id: get_id(),
+          app: get('app_name'),
+          time: time,
+          line: line,
+          html: ansi_up.linkify(ansi_up.ansi_to_html(ansi_up.escape_for_html(line), {use_classes: true})).replace(/<\/span>"/g, '"'),
+          data: options.data || null
+        }
         get('logs').save(log, function (err, saved) {
           if (err) console.error('log save err', err)
         })
