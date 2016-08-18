@@ -39,3 +39,4 @@ c.logic = function container (get, set, clear) {
 }
 c.sim_input_unit = '1d'
 c.sim_input_limit = 1
+c.log_collection_cap = '15MB'
