@@ -15,10 +15,15 @@ module.exports = function zenbrain (p, app_name) {
     },
     get_config: function () {
       var config = require('./config.js')
-      var more_config = require(path.join(p, 'config.js'))
-      Object.keys(more_config).forEach(function (k) {
-        config[k] = more_config[k]
-      })
+      try {
+        var more_config = require(path.join(p, 'config_defaults.js'))
+        Object.keys(more_config).forEach(function (k) {
+          config[k] = more_config[k]
+        })
+      }
+      catch (e) {
+        // ignore
+      }
       return config
     },
     get_codemaps: function () {
@@ -66,7 +71,8 @@ module.exports = function zenbrain (p, app_name) {
       var launcher = app.get('zenbrain:launcher')
       var program = require('commander')
         .version(this.get_version())
-      program._name = app_name
+        .option('--config <path>', 'specify a path for config.js overrides')
+      program._name = 'zenbot'
       app.set('zenbrain:program', program)
       var command = process.argv[2]
       app.set('zenbrain:command', command || null)

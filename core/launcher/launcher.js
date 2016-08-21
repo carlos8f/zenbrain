@@ -1,8 +1,9 @@
 var n = require('numbro')
   , tb = require('timebucket')
+  , path = require('path')
 
 module.exports = function container (get, set, clear) {
-  var c = get('config')
+  
   var app = get('app')
   return function launcher (action) {
     return function () {
@@ -10,6 +11,21 @@ module.exports = function container (get, set, clear) {
       var options = args.pop()
       set('args', args)
       set('options', options)
+      var c = get('config')
+      if (options.parent.config) {
+        try {
+          var more_config = require(path.resolve(process.cwd(), options.parent.config))
+        }
+        catch (e) {
+          if (e.code === 'MODULE_NOT_FOUND') {
+            throw new Error('No config found. Please copy config_sample.js to ' + options.parent.config + ', edit, and re-try.')
+          }
+        }
+        Object.keys(more_config).forEach(function (k) {
+          c[k] = more_config[k]
+        })
+        set('@config', c)
+      }
       if (get.exists('setup.' + get('command'))) {
         get('setup.' + get('command'))()
       }

@@ -19,6 +19,9 @@ module.exports = function container (get, set, clear) {
       var command = commands[cmd]
       if (!command) throw new Error('command not found: ' + cmd)
       var sub_args = [cmd]
+      if (options.parent.config) {
+        sub_args.push('--config', options.parent.config)
+      }
       ;(command.options || []).forEach(function (option) {
         if (typeof options[option.name] !== 'undefined') {
           sub_args.push('--' + option.name)
