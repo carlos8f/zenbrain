@@ -16,7 +16,7 @@ module.exports = function zenbrain (p, app_name) {
     get_config: function () {
       var config = require('./config.js')
       try {
-        var more_config = require(path.join(p, 'config_defaults.js'))
+        var more_config = require(path.join(p, 'config_defaults.js'))()
         Object.keys(more_config).forEach(function (k) {
           config[k] = more_config[k]
         })
