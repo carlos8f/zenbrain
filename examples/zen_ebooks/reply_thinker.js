@@ -80,8 +80,8 @@ module.exports = function container (get, set, clear) {
   var m = markov()
   var sanitize = get('utils.sanitize_tweet_text')
   var first_seed = true
-  var c = get('config')
   return function thinker (tick, cb) {
+    var c = get('config')
     var rs = get('run_state')
     if (!rs.tweet_queue) {
       rs.tweet_queue = []

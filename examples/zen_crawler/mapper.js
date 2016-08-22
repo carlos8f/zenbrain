@@ -13,11 +13,11 @@ var minimatch = require('minimatch')
 
 module.exports = function container (get, set, clear) {
   var map = get('map')
-  var c = get('config')
   process.on('uncaughtException', function (err) {
     get('logger').error('uncaught', err, {feed: 'errors'})
   })
   return function mapper (cb) {
+    var c = get('config')
     var rs = get('run_state')
     if (!rs.queue || !rs.queue.length) {
       rs.queue = [c.crawler_start_url]

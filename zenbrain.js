@@ -16,7 +16,7 @@ module.exports = function zenbrain (p, app_name) {
     get_config: function () {
       var config = require('./config.js')
       try {
-        var more_config = require(path.join(p, 'config_defaults.js'))()
+        var more_config = require(path.join(p, 'config.js'))
         Object.keys(more_config).forEach(function (k) {
           config[k] = more_config[k]
         })
@@ -27,34 +27,7 @@ module.exports = function zenbrain (p, app_name) {
       return config
     },
     get_codemaps: function () {
-      return this.get_config().enabled_plugins.map(function (plugin) {
-        var map
-        try {
-          map = require(path.join(p, 'plugins', plugin, '_codemap'))
-        }
-        catch (e) {
-          if (e.code === 'MODULE_NOT_FOUND') {
-            try {
-              map = require('./' + plugin + '/_codemap')
-            }
-            catch (e) {
-              try {
-                map = require(plugin + '/_codemap')
-              }
-              catch (e) {
-                if (e.code === 'MODULE_NOT_FOUND') {
-                  throw new Error('plugin `' + plugin + '` could not be found.')
-                }
-                throw e
-              }
-            }
-          }
-          else {
-            throw e
-          }
-        }
-        return map
-      }).concat(require('./_codemap'), require(path.join(p, '_codemap')))
+      return [require('./_codemap'), require(path.join(p, '_codemap'))]
     },
     make_app: function () {
       return motley({

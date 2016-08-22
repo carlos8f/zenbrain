@@ -1,11 +1,11 @@
 var n = require('numbro')
 
 module.exports = function container (get, set, clear) {
-  var c = get('config')
   var thoughts_to_tick = get('thoughts_to_tick')
   // process unprocessed thoughts
   var thought_ids = []
   return function thought_reducer (cb) {
+    var c = get('config')
     //get('logger').info('thought_reducer')
     var before = new Date().getTime()
     var returned = false

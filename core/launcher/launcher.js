@@ -20,6 +20,7 @@ module.exports = function container (get, set, clear) {
           if (e.code === 'MODULE_NOT_FOUND') {
             throw new Error('No config found. Please copy config_sample.js to ' + options.parent.config + ', edit, and re-try.')
           }
+          throw e
         }
         Object.keys(more_config).forEach(function (k) {
           c[k] = more_config[k]

@@ -3,10 +3,10 @@ var tb = require('timebucket')
   , colors = require('colors')
 
 module.exports = function container (get, set, clear) {
-  var c = get('config')
   var series = get('motley:vendor.run-series')
   var get_timestamp = get('utils.get_timestamp')
   return function run () {
+    var c = get('config')
     if (get('args').length) {
       throw new Error('unknown arg')
     }
@@ -16,7 +16,7 @@ module.exports = function container (get, set, clear) {
     get('logger').info('runner', 'starting'.grey)
     ;c.reducer_sizes.forEach(function (size) {
       rs[size] || (rs[size] = {})
-      rs[size].max_time || (rs[size].max_time = new Date().getTime())
+      rs[size].max_time = start
       ;(function getNext () {
         var params = {
           query: {

@@ -2,13 +2,13 @@ var parallel = require('run-parallel')
   , tb = require('timebucket')
 
 module.exports = function container (get, set, clear) {
-  var c = get('config')
   var app_name = get('app_name')
   var apply_funcs = get('utils.apply_funcs')
   var tick_to_ticks = get('tick_to_ticks')
   var passive_update = get('utils.passive_update')
   var get_timestamp = get('utils.get_timestamp')
   return function thoughts_to_tick (thoughts) {
+    var c = get('config')
     //get('logger').info('thoughts_to_tick', thoughts.length, get_timestamp(thoughts[0].time))
     var groups = {}
     thoughts.forEach(function (thought) {

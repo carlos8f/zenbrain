@@ -3,7 +3,6 @@ var assert = require('assert')
   , tb = require('timebucket')
 
 module.exports = function container (get, set, clear) {
-  var c = get('config')
   var get_id = get('utils.get_id')
   var apply_funcs = get('utils.apply_funcs')
   var atomic_update = get('utils.atomic_update')
@@ -15,11 +14,13 @@ module.exports = function container (get, set, clear) {
   var timeout
   var updating = false
   function queueNext () {
+    var c = get('config')
     if (queued) return
     queued = true
     timeout = setTimeout(doNext, c.passive_update_timeout)
   }
   function doNext () {
+    var c = get('config')
     if (updating) return
     updating = true
     clearTimeout(timeout)

@@ -1,7 +1,6 @@
 var parallel = require('run-parallel')
 
 module.exports = function container (get, set) {
-  var c = get('zenbrain:config')
   return function ensure_indexes (cb) {
     var tasks = []
     tasks.push(function (done) {

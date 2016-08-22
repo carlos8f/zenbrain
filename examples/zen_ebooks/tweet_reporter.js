@@ -3,8 +3,8 @@ var colors = require('colors')
 
 module.exports = function container (get, set, clear) {
   var twitter = get('twitter')
-  var c = get('config')
   return function reporter (tick, cb) {
+    var c = get('config')
     if (tick.size !== c.brain_speed) return cb()
     var rs = get('run_state')
     //get('logger').info('tweet reporter', 'Reporting...')

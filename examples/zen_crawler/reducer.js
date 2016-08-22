@@ -5,9 +5,9 @@ var extractor = require('unfluff')
   , rp = require('rightpad')
 
 module.exports = function container (get, set, clear) {
-  var c = get('config')
   //console.error("outside")
   return function reducer (t, cb) {
+    var c = get('config')
     //console.error('reducing', t.tick.id)
     var rs = get('run_state')
     var tick = t.tick

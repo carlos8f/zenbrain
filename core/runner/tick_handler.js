@@ -1,11 +1,11 @@
 var tb = require('timebucket')
 
 module.exports = function container (get, set, clear) {
-  var c = get('config')
   var get_id = get('utils.get_id')
   var apply_funcs = get('utils.apply_funcs')
   var get_timestamp = get('utils.get_timestamp')
   return function tick_handler (tick, rs, cb) {
+    var c = get('config')
     rs.queue || (rs.queue = [])
     rs.actions || (rs.actions = [])
     function trigger (action) {

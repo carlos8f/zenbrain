@@ -1,8 +1,8 @@
 var parallel = require('run-parallel-limit')
 
 module.exports = function container (get, set, clear) {
-  var c = get('config')
   return function status () {
+    var c = get('config')
     if (get('args').length) {
       throw new Error('unknown arg')
     }

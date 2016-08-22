@@ -1,9 +1,9 @@
 var assert = require('assert')
 
 module.exports = function container (get, set, clear) {
-  var c = get('config')
   var get_id = get('utils.get_id')
   return function atomic_update (coll, id, updater, cb, backoff) {
+    var c = get('config')
     var returned = false
     setTimeout(function () {
       if (!returned) {

@@ -3,12 +3,12 @@ var tb = require('timebucket')
   , assert = require('assert')
 
 module.exports = function container (get, set, clear) {
-  var c = get('config')
   var series = get('motley:vendor.run-series')
   var get_timestamp = get('utils.get_timestamp')
   var get_id = get('utils.get_id')
   var get_duration = get('utils.get_duration')
   return function sim () {
+    var c = get('config')
     var options = get('options')
     if (!options.verbose) {
       set('@silent', true)

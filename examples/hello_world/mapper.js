@@ -3,9 +3,9 @@ var markov = require('markov')
   , colors = require('colors')
 
 module.exports = function container (get, set, clear) {
-  var c = get('config')
   var map = get('map')
   return function mapper () {
+    var c = get('config')
     // map some random zen advice
     var m = markov()
     var uri = c.seed_text_url

@@ -3,25 +3,29 @@ var tb = require('timebucket')
   , n = require('numbro')
 
 module.exports = function container (get, set, clear) {
-  var c = get('config')
   var app_name = get('app_name')
   var apply_funcs = get('utils.apply_funcs')
   var passive_update = get('utils.passive_update')
   var counter = 0
   var per_sec = 0
-  function reducer_perf_report () {
-    per_sec = n(counter).divide(30).format('0')
-    get('db').collection('thoughts').count({app: get('app_name')}, function (err, thought_count) {
-      if (err) throw err
-      if (n(counter).divide(30).value() >= c.reducer_perf_report_min || thought_count) {
-        get('logger').info('reducer', 'processing  '.grey + per_sec + '/ticks sec, thought queue: '.grey + thought_count, {feed: 'reducer'})
-      }
-      counter = 0
-      setTimeout(reducer_perf_report, c.reducer_perf_report_timeout)
-    })
-  }
-  setTimeout(reducer_perf_report, c.reducer_perf_report_timeout)
+  var first_run = true
   return function tick_to_ticks (sub_tick) {
+    var c = get('config')
+    if (first_run) {
+      function reducer_perf_report () {
+        per_sec = n(counter).divide(30).format('0')
+        get('db').collection('thoughts').count({app: get('app_name')}, function (err, thought_count) {
+          if (err) throw err
+          if (n(counter).divide(30).value() >= c.reducer_perf_report_min || thought_count) {
+            get('logger').info('reducer', 'processing  '.grey + per_sec + '/ticks sec, thought queue: '.grey + thought_count, {feed: 'reducer'})
+          }
+          counter = 0
+          setTimeout(reducer_perf_report, c.reducer_perf_report_timeout)
+        })
+      }
+      setTimeout(reducer_perf_report, c.reducer_perf_report_timeout)
+      first_run = false
+    }
     //get('logger').info('tick_to_ticks', sub_tick.id)
     counter++
     c.reducer_sizes.slice(1).forEach(function (size) {
