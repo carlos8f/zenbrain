@@ -14,12 +14,12 @@ module.exports = function container (get, set, clear) {
       var c = get('config')
       if (options.parent.config) {
         try {
-          var p = path.resolve(process.cwd(), options.parent.config)
+          var p = path.isAbsolute(options.parent.config) ? options.parent.config : path.resolve(process.cwd(), options.parent.config)
           var more_config = require(p)
         }
         catch (e) {
           if (e.code === 'MODULE_NOT_FOUND') {
-            throw new Error('No config found. Please copy config_sample.js to ' + options.parent.config + ', edit, and re-try.')
+            throw new Error('No config found. Please copy config_sample.js to config.js, edit, and re-try.')
           }
           throw e
         }
