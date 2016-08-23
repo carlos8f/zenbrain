@@ -11,6 +11,11 @@
       "name": "verbose",
       "spec": "-v, --verbose",
       "description": "output runner debug info"
-    }
+    },
+	{
+	  "name": "port",
+	  "spec": "-p, --port <port>",
+	  "description": "port to listen on"
+	}
   ]
 }
