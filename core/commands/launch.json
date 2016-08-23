@@ -6,6 +6,11 @@
     {
       "name": "backfill",
       "description": "backfill historical trades for use in simulation"
+    },
+    {
+      "name": "verbose",
+      "spec": "-v, --verbose",
+      "description": "output runner debug info"
     }
   ]
 }

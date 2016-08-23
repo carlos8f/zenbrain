@@ -5,8 +5,10 @@ var tb = require('timebucket')
 module.exports = function container (get, set, clear) {
   var series = get('motley:vendor.run-series')
   var get_timestamp = get('utils.get_timestamp')
+  var get_tick_str = get('utils.get_tick_str')
   return function run () {
     var c = get('config')
+    var options = get('options')
     if (get('args').length) {
       throw new Error('unknown arg')
     }
@@ -17,6 +19,7 @@ module.exports = function container (get, set, clear) {
     ;c.reducer_sizes.forEach(function (size) {
       rs[size] || (rs[size] = {})
       rs[size].max_time = start
+      var waiting = false
       ;(function getNext () {
         var params = {
           query: {
@@ -38,6 +41,9 @@ module.exports = function container (get, set, clear) {
             var tasks = ticks.map(function (tick) {
               rs[size].max_time = Math.max(tick.time, rs[size].max_time)
               return function task (done) {
+                if (get('command') === 'run' && options.verbose) {
+                  get('logger').info('runner', get_tick_str(tick.id), 'running'.grey, {feed: 'trader'})
+                }
                 runner(tick, rs, function (err) {
                   if (err) return done(err)
                   setImmediate(done)
@@ -48,10 +54,15 @@ module.exports = function container (get, set, clear) {
               if (err) {
                 get('logger').error('run err', err)
               }
+              waiting = false
               setImmediate(getNext)
             })
           }
           else {
+            if (!waiting && options.verbose) {
+              get('logger').info('runner', ('waiting for next ' + size + ' tick...').grey, {feed: 'trader'})
+            }
+            waiting = true
             setTimeout(getNext, c.brain_speed_ms)
           }
         })

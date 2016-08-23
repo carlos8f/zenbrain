@@ -1,5 +1,12 @@
 {
   "name": "run",
   "spec": "run",
-  "description": "run"
+  "description": "run",
+  "options": [
+    {
+      "name": "verbose",
+      "spec": "-v, --verbose",
+      "description": "output runner debug info"
+    }
+  ]
 }
