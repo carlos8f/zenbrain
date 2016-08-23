@@ -6,6 +6,10 @@ module.exports = function container (get, set, clear) {
   var get_timestamp = get('utils.get_timestamp')
   return function tick_handler (tick, rs, cb) {
     var c = get('config')
+    if (!c.logic_funcs) {
+      // cache the logic funcs so container runs once
+      c.logic_funcs = c.logic.call(null, get, set, clear)
+    }
     rs.queue || (rs.queue = [])
     rs.actions || (rs.actions = [])
     function trigger (action) {
@@ -17,7 +21,7 @@ module.exports = function container (get, set, clear) {
       rs.queue.push(action)
       rs.actions.push(action)
     }
-    apply_funcs(tick, trigger, rs, c.logic.call(null, get, set, clear), function (err) {
+    apply_funcs(tick, trigger, rs, c.logic_funcs, function (err) {
       if (err) return cb(err)
       var tasks = rs.queue.map(function (action) {
         return function (done) {
