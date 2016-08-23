@@ -14,7 +14,8 @@ module.exports = function container (get, set, clear) {
       var c = get('config')
       if (options.parent.config) {
         try {
-          var more_config = require(path.resolve(process.cwd(), options.parent.config))
+          var p = path.resolve(process.cwd(), options.parent.config)
+          var more_config = require(p)
         }
         catch (e) {
           if (e.code === 'MODULE_NOT_FOUND') {
@@ -48,6 +49,9 @@ module.exports = function container (get, set, clear) {
         process.once('SIGINT', onExit)
         process.once('SIGTERM', onExit)
         var run_state_id = get('app_name') + '_' + get('command')
+        if (options.parent.rs) {
+          run_state_id += '_' + options.parent.rs
+        }
         get('logger').info('launcher', 'cmd `'.grey + get('command') + '` booting'.grey)
         get('run_states').load(run_state_id, function (err, run_state) {
           if (err) throw err

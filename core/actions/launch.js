@@ -22,6 +22,9 @@ module.exports = function container (get, set, clear) {
       if (options.parent.config) {
         sub_args.push('--config', options.parent.config)
       }
+      if (options.parent.rs) {
+        sub_args.push('--rs', options.parent.rs)
+      }
       ;(command.options || []).forEach(function (option) {
         if (typeof options[option.name] !== 'undefined') {
           sub_args.push('--' + option.name)

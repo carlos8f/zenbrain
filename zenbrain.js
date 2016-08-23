@@ -45,6 +45,7 @@ module.exports = function zenbrain (p, app_name) {
       var program = require('commander')
         .version(this.get_version())
         .option('--config <path>', 'specify a path for config.js overrides')
+        .option('--rs <suffix>', 'suffix to give the run_state.id')
       program._name = 'zenbot'
       app.set('zenbrain:program', program)
       var command = process.argv[2]
