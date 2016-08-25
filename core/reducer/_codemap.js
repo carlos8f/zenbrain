@@ -5,5 +5,7 @@ module.exports = {
   thoughts_to_tick: require('./thoughts_to_tick'),
   'reducers[]': [
     '#thought_reducer'
-  ]
+  ],
+  tick_reducers: [],
+  thought_reducers: []
 }

@@ -2,6 +2,9 @@ module.exports = function container (get, set, clear) {
   return function apply_funcs () {
     var apply_args = [].slice.call(arguments)
     var cb = apply_args.pop(), funcs = apply_args.pop()
+    if (typeof cb !== 'function') {
+      throw new Error('cb not a function')
+    }
     funcs = funcs.slice()
     var result = [null]
     ;(function doNext () {

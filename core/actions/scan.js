@@ -6,19 +6,17 @@ module.exports = function container (get, set, clear) {
     if (get('args').length) {
       throw new Error('unknown arg')
     }
-    get('reducers').forEach(function (reducer) {
-      ;(function reduce () {
-        //console.error('reducer')
-        reducer(function (err, idle) {
-          //console.error('reducer finish', idle)
+    get('scanners').forEach(function (scanner) {
+      ;(function scan () {
+        scanner(function (err) {
           if (err) {
             console.error(err)
-            get('logger').error('reduce err', err, {feed: 'errors'})
+            get('logger').error('scan err', err, {feed: 'errors'})
             if (err.name === 'MongoError') {
               throw err
             }
           }
-          setTimeout(reduce, idle ? c.reduce_timeout : 0)
+          setTimeout(scan, c.scan_timeout)
         })
       })()
     })
