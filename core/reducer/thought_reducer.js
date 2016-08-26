@@ -47,14 +47,6 @@ module.exports = function container (get, set, clear) {
         //get('logger').info('thought_reducer', 'done'.grey)
         thoughts_to_tick(thoughts)
         returned = true
-        get('db').collection('thoughts').count({
-          app: get('app_name'),
-        }, function (err, count) {
-          if (err) return cb(err)
-          if (count) {
-            //get('logger').info('reducer', 'remaining thoughts...'.grey, count)
-          }
-        })
         cb(null, false)
       })
     })
