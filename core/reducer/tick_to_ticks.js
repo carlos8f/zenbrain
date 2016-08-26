@@ -9,6 +9,7 @@ module.exports = function container (get, set, clear) {
   var counter = 0
   var per_sec = 0
   var first_run = true
+  var tick_defaults = get('tick_defaults')
   return function tick_to_ticks (sub_tick) {
     var c = get('config')
     if (first_run) {
@@ -31,15 +32,8 @@ module.exports = function container (get, set, clear) {
     c.reducer_sizes.slice(1).forEach(function (size) {
       var tick_bucket = tb(sub_tick.time).resize(size)
       var tick_id = app_name + ':' + tick_bucket.toString()
-      var defaults = {
-        app: app_name,
-        id: tick_id,
-        time: tick_bucket.toMilliseconds(),
-        size: size,
-        data: {}
-      }
       //get('logger').info('tick_to_ticks', sub_tick.id, '->', next_size, 'passive update start')
-      passive_update('ticks', tick_id, defaults, function (tick, done) {
+      passive_update('ticks', tick_id, tick_defaults(tick_id, size), function (tick, done) {
         var g = {
           tick: tick,
           sub_tick: sub_tick
@@ -47,6 +41,7 @@ module.exports = function container (get, set, clear) {
         tick.processed = false
         apply_funcs(g, get('tick_reducers'), function (err, g) {
           if (err) return done(err)
+          g.tick.processed = false
           done(null, g.tick)
         })
       }, function (err) {
