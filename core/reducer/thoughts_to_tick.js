@@ -34,16 +34,8 @@ module.exports = function container (get, set, clear) {
         g.tick = tick
         apply_funcs(g, get('thought_reducers'), function (err, g) {
           if (err) return done(err)
-          g = {
-            tick: tick_defaults(tick_id, c.reducer_sizes[0]),
-            sub_tick: g.tick
-          }
-          apply_funcs(g, get('tick_reducers'), function (err, g) {
-            if (err) return done(err)
-            tick_to_ticks(g.tick)
-            g.tick.processed = false
-            done(null, g.tick)
-          })
+          g.tick.processed = false
+          done(null, g.tick)
         })
       }
       passive_update('ticks', tick_id, tick_defaults(tick_id, c.reducer_sizes[0]), updater)

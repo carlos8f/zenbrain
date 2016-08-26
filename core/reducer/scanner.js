@@ -8,6 +8,7 @@ module.exports = function container (get, set, clear) {
   var get_tick_str = get('utils.get_tick_str')
   var apply_funcs = get('utils.apply_funcs')
   var passive_update = get('utils.passive_update')
+  var get_timestamp = get('utils.get_timestamp')
   // scanner: progressive forward scan +update of ticks after reduction
   return function scanner (cb) {
     var c = get('config')
@@ -44,6 +45,7 @@ module.exports = function container (get, set, clear) {
           var start_tick = unprocessed_start.pop()
           s.first_time = s.first_time ? Math.min(s.first_time, start_tick.time) : start_tick.time
           s.scan_time = start_tick.time
+          var scanned = []
           var first_tick_id = get('app_name') + ':' + tb(s.first_time).resize(size).toString()
           //get('logger').info('scanner', get_tick_str(first_tick_id), 'first tick'.grey)
           //get('logger').info('scanner', get_tick_str(start_tick.id), 'scan start'.grey)
@@ -77,6 +79,7 @@ module.exports = function container (get, set, clear) {
             g.tick = start_tick
             scan_tick(g, function (err, g) {
               if (err) return done(err)
+              s.scan_time = tb(s.scan_time).resize(size).add(1).toMilliseconds()
               scan_forward(g)
             })
           }
@@ -92,13 +95,15 @@ module.exports = function container (get, set, clear) {
               // defer the merge and continue
               passive_update('ticks', mine.id, mine, function (tick, update_done) {
                 // merge passed-in tick with scan result
-                var diff = xdiff.diff3(tick, orig, mine) || []
+                //get('logger').info('scanner', get_tick_str(tick.id), 'updating', tick, {feed: 'scanner'})
+                var diff = xdiff.diff3(mine, orig, tick) || []
                 var merged = xdiff.patch(orig, diff)
                 update_done(null, merged)
               }, function (err, tick) {
                 if (err) throw err
-                get('logger').info('scanner', get_tick_str(tick.id), 'scanned', tick, {feed: 'scanner'})
+                //get('logger').info('scanner', get_tick_str(tick.id), 'scanned', tick, {feed: 'scanner'})
               })
+              scanned.push(mine.id)
               scan_done(null, g)
             })
           }
@@ -137,7 +142,12 @@ module.exports = function container (get, set, clear) {
                     })(s.scan_time)
                     s.scan_time = tb(s.scan_time).resize(size).add(1).toMilliseconds()
                   }
-                  return series(sub_tasks, cb)
+                  return series(sub_tasks, function (err) {
+                    if (err) return done(err)
+                    //get('logger').info('scanner', 'scanned', get_timestamp(tb(scanned[0]).toMilliseconds()), '->', get_timestamp(tb(scanned[scanned.length - 1]).toMilliseconds()), {feed: 'scanner'})
+                    scanned = []
+                    done()
+                  })
                 }
                 var index = {}, max_time = 0
                 scan_ticks.forEach(function (tick) {
@@ -151,7 +161,7 @@ module.exports = function container (get, set, clear) {
                 // fill in missing ticks with default values
                 var sub_tasks = []
                 //console.error('index', index.length)
-                while (s.scan_time < max_time) {
+                while (s.scan_time <= max_time) {
                   // interpolate
                   (function (scan_time) {
                     var current_tick = index['time:' + scan_time]
@@ -171,7 +181,6 @@ module.exports = function container (get, set, clear) {
             })()
           }
         })
-        
       }
     })
     parallel(tasks, cb)
