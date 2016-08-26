@@ -44,6 +44,7 @@ module.exports = function container (get, set, clear) {
           tick: tick,
           sub_tick: sub_tick
         }
+        tick.processed = false
         apply_funcs(g, get('tick_reducers'), function (err, g) {
           if (err) return done(err)
           done(null, g.tick)

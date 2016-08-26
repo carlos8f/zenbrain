@@ -8,7 +8,6 @@ c.twitter_secret = ""
 c.twitter_access_token = ""
 c.twitter_access_token_secret = ""
 c.id_bytes = 8 // for random IDs
-c.bucket_size = "1m"
 c.reducer_limit = 500 // how many thoughts to process per reduce run
 c.reducer_sizes = ["1m", "5m", "15m", "1h", "6h", "1d"]
 c.reducer_perf_report_min = 2
@@ -41,3 +40,4 @@ c.logic = function container (get, set, clear) {
 }
 c.sim_input_unit = '1d'
 c.sim_input_limit = 1
+c.scanner_limit = 100

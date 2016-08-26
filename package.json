@@ -24,6 +24,7 @@
     "sig": "^1.0.0",
     "timebucket": "^0.3.4",
     "twit": "^2.2.4",
+    "xdiff": "git+https://github.com/carlos8f/xdiff.git#cr/id",
     "zero-fill": "^2.2.3"
   },
   "devDependencies": {

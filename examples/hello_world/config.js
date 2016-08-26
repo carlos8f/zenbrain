@@ -1,6 +1,5 @@
 var c = module.exports = {}
 c.reducer_sizes = ["1s"]
-c.bucket_size = "1s"
 c.map_interval = 10000
 c.reduce_timeout = 1000
 c.passive_update_timeout = 500
