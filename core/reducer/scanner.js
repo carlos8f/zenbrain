@@ -11,6 +11,21 @@ module.exports = function container (get, set, clear) {
   var get_timestamp = get('utils.get_timestamp')
   var get_duration = get('utils.get_duration')
   // scanner: progressive forward scan +update of ticks after reduction
+  // process all ticks at start
+  get('db').collection('ticks').update({
+    app: get('app_name')
+  }, {
+    $set: {
+      processed: false
+    }
+  }, {
+    multi: true
+  }, function (err, result) {
+    if (err) throw err
+    if (result) {
+      //console.error('update result', result.result)
+    }
+  })
   return function scanner (cb) {
     var c = get('config')
     var rs = get('run_state')
