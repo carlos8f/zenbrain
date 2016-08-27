@@ -9,6 +9,7 @@ module.exports = function container (get, set, clear) {
   var apply_funcs = get('utils.apply_funcs')
   var passive_update = get('utils.passive_update')
   var get_timestamp = get('utils.get_timestamp')
+  var get_duration = get('utils.get_duration')
   // scanner: progressive forward scan +update of ticks after reduction
   return function scanner (cb) {
     var c = get('config')
@@ -43,12 +44,12 @@ module.exports = function container (get, set, clear) {
           // - `tick` being scanned
           // - `last_tick` scanned
           var start_tick = unprocessed_start.pop()
+          s.start_time = start_tick.time
+          //get('logger').info('scanner', size, 'start time', get_timestamp(s.start_time).grey, {feed: 'scanner'})
           s.first_time = s.first_time ? Math.min(s.first_time, start_tick.time) : start_tick.time
+          //get('logger').info('scanner', size, 'first time', get_timestamp(s.first_time).grey, {feed: 'scanner'})
           s.scan_time = start_tick.time
           var scanned = []
-          var first_tick_id = get('app_name') + ':' + tb(s.first_time).resize(size).toString()
-          //get('logger').info('scanner', get_tick_str(first_tick_id), 'first tick'.grey)
-          //get('logger').info('scanner', get_tick_str(start_tick.id), 'scan start'.grey)
           // scan back one to get one item of history.
           var history_bucket = tb(s.scan_time).resize(size).subtract(1)
           get('ticks').select({
@@ -86,6 +87,7 @@ module.exports = function container (get, set, clear) {
           function scan_tick (g, scan_done) {
             // record original for 3-way merge
             //get('logger').info('scanner', get_tick_str(g.tick.id), 'scanning', {feed: 'scanner'})
+            //get('logger').info('scanner', 'scanning'.grey, size, get_timestamp(g.tick.time).grey, {feed: 'scanner'})
             var orig = JSON.parse(JSON.stringify(g.tick))
             apply_funcs(g, get('scanners'), function (err, g) {
               if (err) return scan_done(err)
@@ -144,7 +146,10 @@ module.exports = function container (get, set, clear) {
                   }
                   return series(sub_tasks, function (err) {
                     if (err) return done(err)
-                    //get('logger').info('scanner', 'scanned', get_timestamp(tb(scanned[0]).toMilliseconds()), '->', get_timestamp(tb(scanned[scanned.length - 1]).toMilliseconds()), {feed: 'scanner'})
+                    //get('logger').info('scanner', 'scanned'.grey, get_tick_str(tb(s.start_time).resize(size).toString()).grey, '->'.grey, get_tick_str(tb(scanned[scanned.length - 1]).resize(size).toString()).grey, {feed: 'scanner'})
+                    //get('logger').info('scanner', 'scanned'.grey, size, get_timestamp(s.start_time).grey, '->'.grey, get_timestamp(tb(scanned[scanned.length - 1]).toMilliseconds()).grey, {feed: 'scanner'})
+                    //var time_diff = tb(scanned[scanned.length - 1]).toMilliseconds() - s.start_time
+                    //get('logger').info('scanner', 'duration'.grey, get_duration(1000 * time_diff).grey, {feed: 'scanner'})
                     scanned = []
                     done()
                   })

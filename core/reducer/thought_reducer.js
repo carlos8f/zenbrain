@@ -1,7 +1,9 @@
 var n = require('numbro')
+  , tb = require('timebucket')
 
 module.exports = function container (get, set, clear) {
   var thoughts_to_tick = get('thoughts_to_tick')
+  var get_tick_str = get('utils.get_tick_str')
   // process unprocessed thoughts
   var thought_ids = []
   return function thought_reducer (cb) {
@@ -44,7 +46,7 @@ module.exports = function container (get, set, clear) {
         }
       }, function (err) {
         if (err) return cb(err)
-        //get('logger').info('thought_reducer', 'done'.grey)
+        //get('logger').info('thought_reducer', get_tick_str(tb(thoughts[0].time).resize('1h').toString()), 'oldest hour'.grey)
         thoughts_to_tick(thoughts)
         returned = true
         cb(null, false)

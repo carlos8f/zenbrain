@@ -15,7 +15,7 @@ module.exports = function container (get, set, clear) {
     var rs = get('run_state')
     var runner = get('runner')
     var start = new Date().getTime()
-    get('logger').info('runner', 'starting'.grey)
+    //get('logger').info('runner', 'starting'.grey)
     ;c.reducer_sizes.forEach(function (size) {
       rs[size] || (rs[size] = {})
       rs[size].max_time = start
@@ -42,7 +42,7 @@ module.exports = function container (get, set, clear) {
               rs[size].max_time = Math.max(tick.time, rs[size].max_time)
               return function task (done) {
                 if (get('command') === 'run' && options.verbose) {
-                  get('logger').info('runner', get_tick_str(tick.id), 'running'.grey, {feed: 'trader'})
+                  //get('logger').info('runner', get_tick_str(tick.id), 'running'.grey, {feed: 'trader'})
                 }
                 runner(tick, rs, function (err) {
                   if (err) return done(err)
@@ -60,7 +60,7 @@ module.exports = function container (get, set, clear) {
           }
           else {
             if (!waiting && options.verbose) {
-              get('logger').info('runner', ('waiting for next ' + size + ' tick...').grey, {feed: 'trader'})
+              //get('logger').info('runner', ('waiting for next ' + size + ' tick...').grey, {feed: 'trader'})
             }
             waiting = true
             setTimeout(getNext, c.brain_speed_ms)
