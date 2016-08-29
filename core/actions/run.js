@@ -17,8 +17,8 @@ module.exports = function container (get, set, clear) {
     get('logger').info('runner', 'starting'.grey)
     ;c.reducer_sizes.forEach(function (size) {
       rs[size] || (rs[size] = {})
-      // start with last tick in size
-      rs[size].max_time = tb().resize(size).subtract(2).toMilliseconds()
+      // start with next tick in size
+      rs[size].max_time = tb().resize(size).subtract(1).toMilliseconds()
       var waiting = false
       ;(function getNext () {
         var params = {
