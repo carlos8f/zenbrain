@@ -14,11 +14,11 @@ module.exports = function container (get, set, clear) {
     }
     var rs = get('run_state')
     var runner = get('runner')
-    var start = new Date().getTime()
     get('logger').info('runner', 'starting'.grey)
     ;c.reducer_sizes.forEach(function (size) {
       rs[size] || (rs[size] = {})
-      rs[size].max_time = start
+      // start with last tick in size
+      rs[size].max_time = tb().resize(size).subtract(2).toMilliseconds()
       var waiting = false
       ;(function getNext () {
         var params = {
